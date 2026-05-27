@@ -1,6 +1,6 @@
 # 🐱‍💻 CyberOps Terminal
 
-> **995 commands · 33 categories · 100 online tools · standalone HTML — no install required**
+> **1073 commands · 33 categories · 100 online tools · standalone HTML — no install required**
 
 A single-file offline cheatsheet for pentesters, red teamers, blue teamers, sysadmins and incident responders.  
 Open `CyberOps_v17.html` directly in any browser — no server, no Node, no internet required.
@@ -71,8 +71,8 @@ xdg-open CyberOps_v17.html   # Linux
 | Windows PrivEsc | 14 | WinPEAS, PrivescCheck, Seatbelt, UAC bypass |
 | Windows CMD/PS | 120 | WMIC, LOLBins, PS pure (no modules), DPAPI, Defender |
 | AD Recon | 20 | BloodHound, PowerView, netexec, ACLight |
-| AD Attacks | 42 | Kerberoasting, DCSync, ADCS ESC1-8, Rubeus, Mimikatz |
-| Lateral Movement | 10 | PSExec, WMI, DCOM, SMBexec |
+| AD Attacks | 63 | Kerberoasting, DCSync, ADCS ESC1-8, Rubeus, Mimikatz, PtH/OPtH/PtK full suite |
+| Lateral Movement | 18 | PSExec, WMI, DCOM, SMBexec, PtH (all protocols), evil-winrm, xfreerdp /pth |
 | Persistence & C2 | 14 | Registry, WMI subscriptions, Sliver, Cobalt |
 | Tunneling & Pivot | 13 | Chisel, ligolo-ng, SSH multi-hop, netsh |
 | Cloud & Azure | 28 | pacu, cloudfox, ROADtools, AzureHound, prowler |
@@ -153,6 +153,30 @@ Organised in 11 categories with search and filter:
 
 ---
 
+## Pass-the-Hash Coverage
+
+Full PtH/OPtH/PtK toolkit — researched against NetExec v1.5.1, Impacket, Mimikatz, Rubeus, Rubeus README, HackTricks, Black Hills InfoSec, and Microsoft's NTLM deprecation roadmap (Jan 2026).
+
+| Technique | Tools | Category |
+|-----------|-------|----------|
+| **PtH — SMB exec** | impacket psexec/smbexec/wmiexec/atexec/dcomexec | `lateral` |
+| **PtH — Credential dump** | secretsdump, lsassy, comsvcs MiniDump, nanodump | `adattack` |
+| **PtH — Hash spray** | NetExec `--local-auth`, pwned.txt pipeline | `adattack` |
+| **PtH — All protocols** | NetExec SMB/WinRM/MSSQL/WMI/RDP/LDAP (v1.5.1) | `adattack` |
+| **PtH — RDP** | xfreerdp `/pth:` + Restricted Admin enable | `lateral` |
+| **PtH — WinRM** | evil-winrm hash + cert + Kerberos | `lateral` |
+| **PtH — SMB clients** | smbclient `--pw-nt-hash`, smbmap, pth-toolkit | `lateral` |
+| **Overpass-the-Hash** | Rubeus `asktgt /rc4` + `/createnetonly` + `/opsec` | `adattack` |
+| **Pass-the-Key (AES)** | Rubeus `/aes256` + impacket `-aesKey` | `adattack` |
+| **Token impersonation** | Mimikatz `token::elevate/impersonate`, Incognito | `adattack` |
+| **NTLM relay → PtH** | ntlmrelayx `-socks` + proxychains → secretsdump | `adattack` |
+| **Detection** | Event IDs 4624/4648/7045 + Sysmon EID 10 | `ir_win` |
+| **Hardening** | PPL, WDigest, LmCompatLevel, LAPS, SMB signing | `harden` |
+
+> **Note:** CrackMapExec is archived (Dec 2023). Use `nxc` (NetExec) — `sudo apt install netexec`.
+
+---
+
 ## Data Sources
 
 Commands and techniques aggregated from:
@@ -167,7 +191,9 @@ Commands and techniques aggregated from:
 - [Book of Secret Knowledge](https://github.com/trimstray/the-book-of-secret-knowledge) — shell one-liners
 - [rawsec.ml inventory](https://inventory.raw.pm/tools.html) — security tools catalogue
 - [CISA SPARROW](https://github.com/cisagov/Sparrow) — M365 incident response
-- [Mandiant Azure AD Investigator](https://github.com/mandiant/Azure_Active_Directory_Investigator)
+- [NetExec Wiki](https://www.netexec.wiki/) — v1.1–v1.5.1 release notes (2024–2026)
+- [HackTricks — OPtH/PtK](https://hacktricks.wiki/en/windows-hardening/active-directory-methodology/over-pass-the-hash-pass-the-key.html)
+- [Black Hills InfoSec — NetExec guide](https://www.blackhillsinfosec.com/getting-started-with-netexec/)
 - Custom Cisco IOS switching/routing — STP, HSRP, OSPF, BGP, MPLS, QoS
 - Custom IR playbooks — Windows triage, Linux triage, M365/Entra forensics, AD recovery
 
