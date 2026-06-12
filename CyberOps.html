@@ -420,13 +420,12 @@ var TEAM_MAP={};
 CATEGORIES.forEach(function(c){TEAM_MAP[c.id]=c.team;});
 var CAT_COUNTS={};
 COMMANDS.forEach(function(e){CAT_COUNTS[e.cat]=(CAT_COUNTS[e.cat]||0)+1;});
-var TEAM_CATS={
-  red:['recon','web','shells','linpriv','winpriv','wincmd','adrecon','adattack','lateral','persist','tunnel','cloud','wireless','crack','transfer','evasion'],
-  blue:['logs','hunt','forensics','dfir','netdef','harden'],
-  osint:['osint','bugbounty'],
-  sysops:['sysadmin','netadmin','cisco'],
-  ir:['ir_win','ir_lin','ir_m365','ir_ad']
-};
+var TEAM_CATS={osint:['osint','bugbounty']};
+CATEGORIES.forEach(function(c){
+  if(c.team==='neutral') return;
+  if(!TEAM_CATS[c.team]) TEAM_CATS[c.team]=[];
+  TEAM_CATS[c.team].push(c.id);
+});
 var TAG_MAP={
   critical:{l:'CRIT',c:'tag-crit'},high:{l:'HIGH',c:'tag-high'},medium:{l:'MED',c:'tag-med'},
   low:{l:'LOW',c:'tag-low'},osep:{l:'OSEP',c:'tag-osep'},new:{l:'NEW',c:'tag-new'},
