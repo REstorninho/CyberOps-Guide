@@ -372,7 +372,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
     <div class="fgrp" id="os-group"><button data-os="all" class="a-os-all">ALL OS</button><button data-os="win">⊞ WIN · <span id="cnt-win">0</span></button><button data-os="lin">△ NIX · <span id="cnt-nix">0</span></button></div>
     <button class="fbtn" id="fav-btn">★ FAVS · <span id="cnt-favs">0</span></button>
     <button class="fbtn" id="hist-btn">⏱ HIST · <span id="cnt-hist">0</span></button>
-    <button class="fbtn a-vars" id="vars-btn">▲ VARS · <span id="cnt-vars-filled">0</span>/26</button>
+    <button class="fbtn a-vars" id="vars-btn">▲ VARS · <span id="cnt-vars-filled">0</span>/28</button>
     <span id="result-count">0 cmds</span>
   </div>
   <div id="tag-filter-row">
@@ -721,16 +721,18 @@ var VAR_DEFS=[
   {k:'PORT',     ph:'8080',            grp:'network'},
   {k:'FILE',     ph:'/tmp/payload.exe', grp:'files'},
   {k:'OUTPUT',   ph:'/tmp/output',     grp:'files'},
-  {k:'SPN',      ph:'MSSQLSvc/db.corp.local:1433', grp:'ad'},
   {k:'DC2',      ph:'10.10.10.3',      grp:'ad'},
   {k:'TARGET',   ph:'web01.corp.local', grp:'ad'},
-  {k:'OU',       ph:'OU=Workstations,DC=corp,DC=local', grp:'ad'},
   {k:'SHARE',    ph:'C$',              grp:'ad'},
-  {k:'WORKSPACE',ph:'default',         grp:'cloud'},
-  {k:'BUCKET',   ph:'s3://my-bucket',  grp:'cloud'},
-  {k:'REGION',   ph:'us-east-1',       grp:'cloud'},
-  {k:'APIKEY',   ph:'sk-xxxxxxxxxxxx', grp:'creds'},
-  {k:'TOKEN',    ph:'eyJhbGc...',      grp:'creds'}
+  {k:'TOKEN',    ph:'eyJhbGc...',      grp:'creds'},
+  {k:'DC_IP',    ph:'10.10.10.2',      grp:'ad'},
+  {k:'DC_HOSTNAME',ph:'DC01',          grp:'ad'},
+  {k:'SID',      ph:'S-1-5-21-...',    grp:'ad'},
+  {k:'SERVER_IP',ph:'10.10.10.20',     grp:'network'},
+  {k:'CLIENT',   ph:'10.10.10.30',     grp:'network'},
+  {k:'HASH_TYPE',ph:'1000',            grp:'creds'},
+  {k:'IMAGE',    ph:'nginx:latest',    grp:'cloud'},
+  {k:'PHISHING_DOMAIN',ph:'corp-login.example', grp:'web'}
 ];
 var TOOL_CATS={
   all:'All',recon_osint:'Recon & OSINT',dns:'DNS',ssl:'SSL / TLS',
@@ -886,7 +888,7 @@ function sub(cmd){
   return o;
 }
 function hlCmd(cmd){
-  var re=/(\{[A-Z]+\})/g;
+  var re=/(\{[A-Z0-9_]+\})/g;
   var last=0,m,parts=[];
   while((m=re.exec(cmd))!==null){
     if(m.index>last) parts.push('<span class="ct">'+esc(cmd.slice(last,m.index))+'</span>');
@@ -1213,7 +1215,7 @@ gid('vars-btn').addEventListener('click',function(){
   showVars=!showVars;
   varsPanel.style.display=showVars?'block':'none';
   this.className='fbtn'+(showVars?' a-vars':'');
-  this.innerHTML=(showVars?'\u25b2':'\u25bc')+' VARS \u00b7 <span id="cnt-vars-filled">0</span>/26';
+  this.innerHTML=(showVars?'\u25b2':'\u25bc')+' VARS \u00b7 <span id="cnt-vars-filled">0</span>/28';
   updateVarsCount();
   updateLayout();
 });
