@@ -7,13 +7,13 @@
 
 ## Visão Geral
 
-O **CYBER\_OPS Terminal** é uma cheatsheet interactiva single-file com **1384 comandos** organizados em **42 categorias**, cobrindo toda a stack de operações de segurança — desde recon ofensivo até hardening defensivo, passando por AD attacks, Kerberos, forense, IR, cloud, container security, DevSecOps, mobile, OT/ICS e reporting.
+O **CYBER\_OPS Terminal** é uma cheatsheet interactiva single-file com **1408 comandos** organizados em **41 categorias**, cobrindo toda a stack de operações de segurança — desde recon ofensivo até hardening defensivo, passando por AD attacks, Kerberos, forense, IR, cloud, container security, DevSecOps, mobile, OT/ICS, troubleshooting e reporting.
 
 Desenhado para ser usado em campo: abre no browser, funciona offline, copia comandos com substituição automática de variáveis de sessão.
 
 ```
 CYBER_OPS_TERMINAL v6.1
-1384 commands · 42 categories · 100 online tools
+1408 commands · 41 categories · 100 online tools
 ```
 
 ---
@@ -44,17 +44,17 @@ Não requer servidor, Python, Node, nem qualquer runtime.
 - **ESC** — limpar pesquisa
 
 ### Session Variables
-26 variáveis substituídas automaticamente no momento de copiar:
+29 variáveis substituídas automaticamente no momento de copiar, com **filtro de pesquisa** próprio no painel (por nome ou placeholder):
 
 | Grupo | Variáveis |
 |---|---|
-| Network | `{LHOST}` `{RHOST}` `{LPORT}` `{RPORT}` `{SUBNET}` `{INTERFACE}` `{PORT}` |
-| AD | `{DOMAIN}` `{DC}` `{DC2}` `{SPN}` `{TARGET}` `{OU}` `{SHARE}` |
-| Creds | `{USER}` `{PASS}` `{HASH}` `{APIKEY}` `{TOKEN}` |
-| Web | `{URL}` |
+| Network | `{LHOST}` `{RHOST}` `{HOST}` `{LPORT}` `{RPORT}` `{SUBNET}` `{INTERFACE}` `{PORT}` `{SERVER_IP}` `{CLIENT}` |
+| AD | `{DOMAIN}` `{DC}` `{DC2}` `{TARGET}` `{SHARE}` `{DC_IP}` `{DC_HOSTNAME}` `{SID}` |
+| Creds | `{USER}` `{PASS}` `{HASH}` `{TOKEN}` `{HASH_TYPE}` |
+| Web | `{URL}` `{PHISHING_DOMAIN}` |
 | Recon | `{WORDLIST}` |
 | Files | `{FILE}` `{OUTPUT}` |
-| Cloud | `{WORKSPACE}` `{BUCKET}` `{REGION}` |
+| Cloud | `{IMAGE}` |
 
 ### Outros
 - **★ Favoritos** — marcar comandos para acesso rápido
@@ -67,63 +67,75 @@ Não requer servidor, Python, Node, nem qualquer runtime.
 
 ## Categorias
 
-### 🔴 RED — Offensive (19 categorias · 561 comandos)
+41 categorias agrupadas por `team` (o mesmo campo usado pelo filtro Team da app):
+
+### 🔴 RED — Offensive (20 categorias · 569 comandos)
 
 | ID | Categoria |
 |---|---|
-| `recon` | Recon & Scanning |
-| `web` | Web Exploitation |
-| `shells` | Shells & Listeners |
-| `linpriv` | Linux Privilege Escalation |
-| `winpriv` | Windows Privilege Escalation |
-| `wincmd` | Windows Post-Exploitation |
-| `adrecon` | AD Enumeration |
+| `recon` | Recon & Enum |
+| `bugbounty` | Bug Bounty |
+| `web` | Web & API |
+| `shells` | Shells & Payloads |
+| `linpriv` | Linux PrivEsc |
+| `winpriv` | Windows PrivEsc |
+| `wincmd` | Windows CMD/PS |
+| `adrecon` | AD Recon |
 | `adattack` | AD Attacks |
 | `lateral` | Lateral Movement |
-| `persist` | Persistence & C2 |
-| `tunnel` | Tunnelling & Pivoting |
-| `cloud` | Cloud (AWS/Azure/GCP) |
-| `wireless` | Wireless & RF |
-| `crack` | Password Cracking |
+| `persist` | Persist & C2 |
+| `tunnel` | Tunneling & Pivot |
+| `cloud` | Cloud & Azure |
+| `wireless` | Wireless |
+| `crack` | Hash Cracking |
 | `transfer` | File Transfer |
-| `evasion` | AV/EDR Evasion |
-| `mobile` | Mobile (Android/iOS) |
-| `ot_ics` | OT/ICS |
-| `phishing` | Phishing & Social Engineering |
+| `evasion` | Evasion & OPSEC |
+| `phishing` | Phishing |
+| `mobile` | Mobile |
+| `ot_ics` | OT / ICS |
 
-### 🔵 BLUE — Defensive (8 categorias · 298 comandos)
+### 🔵 BLUE — Defensive (8 categorias · 307 comandos)
 
 | ID | Categoria |
 |---|---|
 | `logs` | Log Analysis |
 | `hunt` | Threat Hunting |
-| `forensics` | Digital Forensics |
-| `dfir` | DFIR & Sysinternals |
-| `netdef` | Network Defence |
-| `harden` | Hardening & Audit |
+| `forensics` | Forensics & DFIR |
+| `dfir` | IR & Memory |
+| `netdef` | Network Defense |
+| `harden` | Hardening |
 | `devsecops` | DevSecOps |
-| `vulnscan` | Vulnerability Scanning |
-
-### 🌐 OSINT (13 categorias · 77 comandos)
-
-`osint` · `bugbounty` · `recon_osint` · `breach` · `threat` · `dns` · `ssl` · `web_sec` · `vuln` · `coding` · `network` · `privacy` · `training`
-
-### ⚙ SYSOPS (8 categorias · 377 comandos)
-
-| ID | Categoria |
-|---|---|
-| `sysadmin` | Linux SysAdmin |
-| `netadmin` | Network Admin |
-| `cisco` | Cisco IOS |
-| `winsrv` | Windows Server (AD/DNS/DHCP/IIS/PKI/RDS/Hyper-V) |
-| `container` | Container Security (Docker/Kubernetes) |
-| `troubleshoot` | Troubleshooting |
-| `reporting` | Reporting (PwnDoc/CVSS/Dradis) |
-| `misc` | Misc Tools |
+| `vulnscan` | Vuln Scan |
 
 ### 🚨 IR — Incident Response (4 categorias · 69 comandos)
 
-`ir_win` · `ir_lin` · `ir_m365` · `ir_ad`
+| ID | Categoria |
+|---|---|
+| `ir_win` | IR Windows |
+| `ir_lin` | IR Linux |
+| `ir_m365` | IR M365 / Entra |
+| `ir_ad` | IR Active Directory |
+
+### ⚙ SYSOPS (7 categorias · 386 comandos)
+
+| ID | Categoria |
+|---|---|
+| `sysadmin` | Sysadmin |
+| `winsrv` | Windows Server (AD/DNS/DHCP/IIS/PKI/RDS/Hyper-V) |
+| `netadmin` | Network Admin |
+| `troubleshoot` | Troubleshooting (inclui diagnóstico `Test-Connection`) |
+| `cisco` | Cisco IOS |
+| `container` | Containers (Docker/Kubernetes) |
+| `reporting` | Reporting (PwnDoc/CVSS/Dradis) |
+
+### ⌬ NEUTRAL (2 categorias · 77 comandos)
+
+| ID | Categoria |
+|---|---|
+| `osint` | OSINT |
+| `misc` | Misc & Arsenal |
+
+> Online Tools (100 ferramentas web) usa um conjunto separado de categorias (`recon_osint`, `dns`, `ssl`, `web_sec`, `vuln`, `threat`, `coding`, `network`, `privacy`, `training`, `breach`) — não conta para os 41 acima.
 
 ---
 
@@ -146,14 +158,14 @@ Cada comando tem tags de severidade, OS e domínio:
 ## Estrutura Técnica
 
 ```
-CyberOps.html          — ficheiro único (~1.2 MB)
-├── COMMANDS[]         — 1384 entradas JSON inline
-├── CATEGORIES[]       — 42 definições de categoria
+CyberOps.html          — ficheiro único (~1.3 MB)
+├── COMMANDS[]         — 1408 entradas JSON inline
+├── CATEGORIES[]       — 42 definições de categoria (41 + "All Ops")
 ├── ONLINE_TOOLS[]     — 100 ferramentas web
 ├── TEAM_CATS{}        — mapeamento team → categorias
 ├── TAG_MAP{}          — 31 tags com labels e CSS
 ├── TOOL_TAGS{}        — ~310 ferramentas com domain tags
-└── VAR_DEFS[]         — 26 variáveis de sessão
+└── VAR_DEFS[]         — 29 variáveis de sessão (com filtro de pesquisa próprio)
 ```
 
 ### Estrutura de um comando
@@ -183,6 +195,7 @@ CyberOps.html          — ficheiro único (~1.2 MB)
 ## Convenções
 
 - **`{RHOST}`** — IP/hostname do alvo em contextos de rede e scanning
+- **`{HOST}`** — Hostname/IP usado em diagnóstico/troubleshooting (ex.: `Test-Connection`)
 - **`{TARGET}`** — Nome de objecto AD (utilizador, computador, grupo)
 - Comandos ordenados por severidade: `critical → high → medium → low`
 - Comandos multi-linha usam `\n` no campo `cmd`
@@ -205,6 +218,7 @@ O projecto foi desenvolvido de forma iterativa com as seguintes milestones:
 - **v1–v5** — Base inicial: recon, web, AD, shells, lateral, persist, evasion
 - **v6** — Expansão major: Windows Server, Kerberos, container, phishing, DevSecOps, mobile, OT/ICS, reporting, vuln scanning, Sysinternals, IR
 - **v6.1** — Estabilização: standardização de variáveis, install fields completos, ordenação por severidade, sistema de domain tags, bug fixes de runtime (mobile browser, anti-recursion, rendering resilience)
+- **v6.1.x** — Troubleshooting de rede: 8 cheat sheets de `Test-Connection` (ping, TCP port, jitter/packet loss, traceroute/MTU, sweep de hosts, fonte/IPv4-IPv6, monitorização contínua, erros comuns); variável `{HOST}`; alternativas `Test-NetConnection`/`TcpClient` para compatibilidade com Windows PowerShell 5.1 (`-TcpPort` só existe em PS7+); filtro de pesquisa no painel `SESSION_VARIABLES`
 
 ### Bugs Resolvidos (v6.1)
 - `</script>` dentro de strings JS fechava o bloco prematuramente
