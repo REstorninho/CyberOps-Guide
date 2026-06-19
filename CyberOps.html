@@ -125,6 +125,12 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 #vars-search:focus{border-color:rgba(251,191,36,.4)}
 #vars-search::placeholder{color:var(--text3)}
 .vars-search-icon{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--text3);pointer-events:none}
+.vars-filter-info{display:flex;align-items:center;justify-content:space-between;gap:8px;
+  background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.25);border-radius:5px;
+  padding:4px 8px;margin-bottom:6px;font-size:.72rem;color:var(--text2)}
+#vars-filter-clear{background:none;border:none;color:var(--text3);font-family:var(--font);
+  font-size:.72rem;cursor:pointer;padding:0}
+#vars-filter-clear:hover{color:var(--text)}
 #vars-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:5px}
 #vars-grid .var-empty{color:var(--text3);font-size:.72rem;padding:4px 2px;grid-column:1/-1}
 .var-field label{display:block;font-size:.65rem;font-weight:700;color:var(--amber);letter-spacing:.1em;margin-bottom:2px}
@@ -169,7 +175,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 
 /* ── COMMAND CARD — compact ── */
 .cmd-card{background:var(--bg2);border:1px solid var(--border);border-radius:5px;
-  overflow:hidden;transition:border-color .12s;position:relative}
+  overflow:hidden;transition:border-color .12s;position:relative;cursor:pointer}
 .cmd-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;
   background:linear-gradient(to bottom,transparent,rgba(16,185,129,.5),transparent);
   opacity:0;transition:opacity .15s}
@@ -433,6 +439,10 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
       <div class="vars-search-wrap">
         <span class="vars-search-icon" style="font-size:.85rem">⌕</span>
         <input id="vars-search" type="text" placeholder="Search variables..." autocomplete="off" spellcheck="false">
+      </div>
+      <div id="vars-filter-info" class="vars-filter-info" style="display:none">
+        <span></span>
+        <button id="vars-filter-clear">✕ Clear</button>
       </div>
       <div id="vars-grid"></div>
     </div>
@@ -866,13 +876,23 @@ mSel.addEventListener('change',function(e){if(!e.target.value)return;activeCat=e
 
 // Vars
 var varsQuery='';
+var varsKeyFilter=null;
 function buildVars(){
   varsGrid.innerHTML='';
   var q=varsQuery.trim().toLowerCase();
-  var defs=q?VAR_DEFS.filter(function(v){return v.k.toLowerCase().indexOf(q)>=0||v.ph.toLowerCase().indexOf(q)>=0;}):VAR_DEFS;
+  var defs;
+  if(varsKeyFilter) defs=VAR_DEFS.filter(function(v){return varsKeyFilter.indexOf(v.k)>=0;});
+  else defs=q?VAR_DEFS.filter(function(v){return v.k.toLowerCase().indexOf(q)>=0||v.ph.toLowerCase().indexOf(q)>=0;}):VAR_DEFS;
+  var filterInfo=gid('vars-filter-info');
+  if(varsKeyFilter){
+    filterInfo.style.display='flex';
+    filterInfo.querySelector('span').textContent='Showing '+varsKeyFilter.length+' variable(s) used by selected command';
+  } else {
+    filterInfo.style.display='none';
+  }
   if(!defs.length){
     var empty=document.createElement('div'); empty.className='var-empty';
-    empty.textContent='No variables match "'+varsQuery+'"';
+    empty.textContent=varsKeyFilter?'Selected command uses no session variables':'No variables match "'+varsQuery+'"';
     varsGrid.appendChild(empty);
   }
   defs.forEach(function(v){
@@ -889,7 +909,26 @@ function buildVars(){
   });
   updateVarsCount();
 }
-gid('vars-search').addEventListener('input',function(e){varsQuery=e.target.value;buildVars();});
+gid('vars-search').addEventListener('input',function(e){varsQuery=e.target.value;varsKeyFilter=null;buildVars();});
+gid('vars-filter-clear').addEventListener('click',function(){varsKeyFilter=null;buildVars();});
+function filterVarsByCommand(entry){
+  var matches=entry.cmd.match(/\{([A-Z][A-Z0-9_]*)\}/g)||[];
+  var keys=[];
+  matches.forEach(function(m){var k=m.slice(1,-1); if(keys.indexOf(k)<0) keys.push(k);});
+  if(!keys.length) return;
+  varsKeyFilter=keys;
+  varsQuery=''; gid('vars-search').value='';
+  buildVars();
+  if(!showVars){
+    showVars=true;
+    varsPanel.style.display='block';
+    var vb=gid('vars-btn');
+    vb.className='fbtn a-vars';
+    vb.innerHTML='▲ VARS · <span id="cnt-vars-filled">0</span>/29';
+    updateVarsCount();
+  }
+  varsPanel.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
 function updateVarsCount(){
   var n=VAR_DEFS.filter(function(v){return vars[v.k]&&vars[v.k].trim();}).length;
   gid('cnt-vars-filled').textContent=n;
@@ -982,7 +1021,7 @@ function _renderGrid(){
       }
     }
     var idxStr=i<9?'00'+(i+1):i<99?'0'+(i+1):''+(i+1);
-    var div=document.createElement('div'); div.className='cmd-card';
+    var div=document.createElement('div'); div.className='cmd-card'; div.setAttribute('data-key',key);
     var copyTxt=copiedKey===key?'\u2713':'\u29c9';
     var favTxt=favs[key]?'\u2605':'\u2606';
     var copyCls=copiedKey===key?' copied':'';
@@ -1014,21 +1053,34 @@ cmdGrid.addEventListener('click',function(e){
     if(btn.nodeType===1&&btn.getAttribute&&btn.getAttribute('data-action')) break;
     btn=btn.parentNode;
   }
-  if(!btn||btn===cmdGrid||!btn.getAttribute) return;
-  var action=btn.getAttribute('data-action');
-  if(!action) return;
-  var key=btn.getAttribute('data-key');
-  if(!key) return;
-  var entry=null;
-  for(var i=0;i<COMMANDS.length;i++){if(COMMANDS[i].cat+'::'+COMMANDS[i].name===key){entry=COMMANDS[i];break;}}
-  if(!entry) return;
-  if(action==='copy') doCopy(entry);
-  if(action==='fav'){
-    if(favs[key]) delete favs[key]; else favs[key]=true;
-    gid('cnt-favs').textContent=Object.keys(favs).length;
-    renderGrid();
+  if(btn&&btn!==cmdGrid&&btn.getAttribute&&btn.getAttribute('data-action')){
+    var action=btn.getAttribute('data-action');
+    var key=btn.getAttribute('data-key');
+    if(!key) return;
+    var entry=null;
+    for(var i=0;i<COMMANDS.length;i++){if(COMMANDS[i].cat+'::'+COMMANDS[i].name===key){entry=COMMANDS[i];break;}}
+    if(!entry) return;
+    if(action==='copy') doCopy(entry);
+    if(action==='fav'){
+      if(favs[key]) delete favs[key]; else favs[key]=true;
+      gid('cnt-favs').textContent=Object.keys(favs).length;
+      renderGrid();
+    }
+    if(action==='install') showInstall(entry);
+    return;
   }
-  if(action==='install') showInstall(entry);
+  var card=e.target;
+  while(card&&card!==cmdGrid){
+    if(card.nodeType===1&&card.className&&card.className.indexOf('cmd-card')>=0) break;
+    card=card.parentNode;
+  }
+  if(!card||card===cmdGrid||!card.getAttribute) return;
+  var ckey=card.getAttribute('data-key');
+  if(!ckey) return;
+  var centry=null;
+  for(var j=0;j<COMMANDS.length;j++){if(COMMANDS[j].cat+'::'+COMMANDS[j].name===ckey){centry=COMMANDS[j];break;}}
+  if(!centry) return;
+  filterVarsByCommand(centry);
 });
 
 function showInstall(entry){
