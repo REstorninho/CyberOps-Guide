@@ -372,7 +372,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
     <div class="fgrp" id="os-group"><button data-os="all" class="a-os-all">ALL OS</button><button data-os="win">⊞ WIN · <span id="cnt-win">0</span></button><button data-os="lin">△ NIX · <span id="cnt-nix">0</span></button></div>
     <button class="fbtn" id="fav-btn">★ FAVS · <span id="cnt-favs">0</span></button>
     <button class="fbtn" id="hist-btn">⏱ HIST · <span id="cnt-hist">0</span></button>
-    <button class="fbtn a-vars" id="vars-btn">▲ VARS · <span id="cnt-vars-filled">0</span>/28</button>
+    <button class="fbtn a-vars" id="vars-btn">▲ VARS · <span id="cnt-vars-filled">0</span>/29</button>
     <span id="result-count">0 cmds</span>
   </div>
   <div id="tag-filter-row">
@@ -707,6 +707,7 @@ var TOOL_TAGS={
 var VAR_DEFS=[
   {k:'LHOST',    ph:'10.10.14.5',      grp:'network'},
   {k:'RHOST',    ph:'10.10.10.10',     grp:'network'},
+  {k:'HOST',     ph:'srv01.corp.local', grp:'network'},
   {k:'LPORT',    ph:'4444',            grp:'network'},
   {k:'RPORT',    ph:'80',              grp:'network'},
   {k:'DOMAIN',   ph:'corp.local',      grp:'ad'},
@@ -1215,7 +1216,7 @@ gid('vars-btn').addEventListener('click',function(){
   showVars=!showVars;
   varsPanel.style.display=showVars?'block':'none';
   this.className='fbtn'+(showVars?' a-vars':'');
-  this.innerHTML=(showVars?'\u25b2':'\u25bc')+' VARS \u00b7 <span id="cnt-vars-filled">0</span>/28';
+  this.innerHTML=(showVars?'\u25b2':'\u25bc')+' VARS \u00b7 <span id="cnt-vars-filled">0</span>/29';
   updateVarsCount();
   updateLayout();
 });
