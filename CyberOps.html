@@ -119,7 +119,14 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 #vars-reset{background:none;border:1px solid var(--border2);border-radius:3px;color:var(--text3);
   cursor:pointer;font-size:.58rem;padding:1px 5px;font-family:var(--font)}
 #vars-reset:hover{color:var(--red)}
+.vars-search-wrap{margin-bottom:6px;position:relative}
+#vars-search{width:100%;background:rgba(0,0,0,.4);border:1px solid var(--border2);border-radius:5px;
+  padding:4px 9px 4px 26px;font-family:var(--font);font-size:.76rem;color:var(--text);outline:none;transition:border-color .15s}
+#vars-search:focus{border-color:rgba(251,191,36,.4)}
+#vars-search::placeholder{color:var(--text3)}
+.vars-search-icon{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--text3);pointer-events:none}
 #vars-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:5px}
+#vars-grid .var-empty{color:var(--text3);font-size:.72rem;padding:4px 2px;grid-column:1/-1}
 .var-field label{display:block;font-size:.65rem;font-weight:700;color:var(--amber);letter-spacing:.1em;margin-bottom:2px}
 .var-field input{width:100%;background:rgba(0,0,0,.4);border:1px solid var(--border2);
   border-radius:3px;padding:2px 6px;font-family:var(--font);font-size:.76rem;
@@ -422,6 +429,10 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
       <div id="vars-header">
         <span id="vars-title">⬡ SESSION_VARIABLES <span>— substituted in all commands</span></span>
         <button id="vars-reset">↺ RESET</button>
+      </div>
+      <div class="vars-search-wrap">
+        <span class="vars-search-icon" style="font-size:.85rem">⌕</span>
+        <input id="vars-search" type="text" placeholder="Search variables..." autocomplete="off" spellcheck="false">
       </div>
       <div id="vars-grid"></div>
     </div>
@@ -854,9 +865,17 @@ function buildNav(){
 mSel.addEventListener('change',function(e){if(!e.target.value)return;activeCat=e.target.value;query='';searchEl.value='';searchClear.style.display='none';buildNav();renderGrid();});
 
 // Vars
+var varsQuery='';
 function buildVars(){
   varsGrid.innerHTML='';
-  VAR_DEFS.forEach(function(v){
+  var q=varsQuery.trim().toLowerCase();
+  var defs=q?VAR_DEFS.filter(function(v){return v.k.toLowerCase().indexOf(q)>=0||v.ph.toLowerCase().indexOf(q)>=0;}):VAR_DEFS;
+  if(!defs.length){
+    var empty=document.createElement('div'); empty.className='var-empty';
+    empty.textContent='No variables match "'+varsQuery+'"';
+    varsGrid.appendChild(empty);
+  }
+  defs.forEach(function(v){
     var d=document.createElement('div'); d.className='var-field';
     var filled=vars[v.k]&&vars[v.k].trim();
     d.innerHTML='<label>'+v.k+'</label><input type="text" data-key="'+v.k+'" placeholder="'+esc(v.ph)+'" value="'+esc(vars[v.k]||'')+'" class="'+(filled?'filled':'')+'">';
@@ -870,6 +889,7 @@ function buildVars(){
   });
   updateVarsCount();
 }
+gid('vars-search').addEventListener('input',function(e){varsQuery=e.target.value;buildVars();});
 function updateVarsCount(){
   var n=VAR_DEFS.filter(function(v){return vars[v.k]&&vars[v.k].trim();}).length;
   gid('cnt-vars-filled').textContent=n;
