@@ -7,13 +7,13 @@
 
 ## Visão Geral
 
-O **CYBER\_OPS Terminal** é uma cheatsheet interactiva single-file com **1421 comandos** organizados em **41 categorias**, cobrindo toda a stack de operações de segurança — desde recon ofensivo até hardening defensivo, passando por AD attacks, Kerberos, forense, IR, cloud, container security, DevSecOps, mobile, OT/ICS, troubleshooting e reporting.
+O **CYBER\_OPS Terminal** é uma cheatsheet interactiva single-file com **1436 comandos** organizados em **41 categorias**, cobrindo toda a stack de operações de segurança — desde recon ofensivo até hardening defensivo, passando por AD attacks, Kerberos, forense, IR, cloud, container security, DevSecOps, mobile, OT/ICS, troubleshooting e reporting.
 
 Desenhado para ser usado em campo: abre no browser, funciona offline, copia comandos com substituição automática de variáveis de sessão.
 
 ```
 CYBER_OPS_TERMINAL v6.1
-1421 commands · 41 categories · 102 online tools
+1436 commands · 41 categories · 102 online tools
 ```
 
 ---
@@ -107,7 +107,7 @@ Não requer servidor, Python, Node, nem qualquer runtime.
 | `devsecops` | DevSecOps |
 | `vulnscan` | Vuln Scan |
 
-### 🚨 IR — Incident Response (4 categorias · 69 comandos)
+### 🚨 IR — Incident Response (4 categorias · 70 comandos)
 
 | ID | Categoria |
 |---|---|
@@ -128,7 +128,7 @@ Não requer servidor, Python, Node, nem qualquer runtime.
 | `container` | Containers (Docker/Kubernetes) |
 | `reporting` | Reporting (PwnDoc/CVSS/Dradis) |
 
-### ⌬ NEUTRAL (2 categorias · 77 comandos)
+### ⌬ NEUTRAL (2 categorias · 91 comandos)
 
 | ID | Categoria |
 |---|---|
@@ -159,7 +159,7 @@ Cada comando tem tags de severidade, OS e domínio:
 
 ```
 CyberOps.html          — ficheiro único (~1.3 MB)
-├── COMMANDS[]         — 1421 entradas JSON inline
+├── COMMANDS[]         — 1436 entradas JSON inline
 ├── CATEGORIES[]       — 42 definições de categoria (41 + "All Ops")
 ├── ONLINE_TOOLS[]     — 102 ferramentas web
 ├── TEAM_CATS{}        — mapeamento team → categorias
@@ -220,6 +220,7 @@ O projecto foi desenvolvido de forma iterativa com as seguintes milestones:
 - **v6.1** — Estabilização: standardização de variáveis, install fields completos, ordenação por severidade, sistema de domain tags, bug fixes de runtime (mobile browser, anti-recursion, rendering resilience)
 - **v6.1.x** — Troubleshooting de rede: 8 cheat sheets de `Test-Connection` (ping, TCP port, jitter/packet loss, traceroute/MTU, sweep de hosts, fonte/IPv4-IPv6, monitorização contínua, erros comuns); variável `{HOST}`; alternativas `Test-NetConnection`/`TcpClient` para compatibilidade com Windows PowerShell 5.1 (`-TcpPort` só existe em PS7+); filtro de pesquisa no painel `SESSION_VARIABLES`; clique num comando filtra automaticamente o painel `SESSION_VARIABLES` para mostrar apenas as variáveis usadas nesse comando
 - **v6.2** — Auditoria de segurança de domínios/email: 13 cheat sheets de SPF, DKIM (verificação e brute-force de selectors), DMARC (registo e auditoria de política), DNSSEC, CAA, MTA-STS, TLS-RPT, BIMI e um script de auditoria completa (bash + PowerShell); 2 ferramentas online adicionadas (dmarcian DMARC Inspector, Mail-Tester)
+- **v6.3** — OSINT avançado: 15 cheat sheets — typosquatting + Certificate Transparency (`dnstwist`/`crt.sh`), trace de phishing M365 (`Get-MessageTrace`, categoria `ir_m365`), threat intel de IPs (GreyNoise, Censys, Onyphe), leak/breach search (LeakIX, DeHashed), recon de empresa (Hunter.io), OSINT de contas Google (`GHunt`), endpoints arquivados em massa (`waybackurls`+`gau`), metadata de documentos (`Metagoofil`), crawler OSINT (`Photon`), fingerprinting `.onion` (`OnionScan`), histórico de WHOIS (Whoxy)
 
 ### Bugs Resolvidos (v6.1)
 - `</script>` dentro de strings JS fechava o bloco prematuramente
