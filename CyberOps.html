@@ -165,6 +165,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .cat-badge.blue{border-color:rgba(96,165,250,.35);color:#93c5fd}
 .cat-badge.sysops{border-color:rgba(167,139,250,.35);color:#c4b5fd}
 .cat-badge.neutral{border-color:rgba(16,185,129,.35);color:var(--green2)}
+.cat-badge.ir{border-color:rgba(251,146,60,.4);color:#fdba74}
 
 #mobile-select{display:none;width:100%;background:var(--bg2);border:1px solid var(--border2);
   border-radius:5px;padding:5px 9px;color:var(--text);font-family:var(--font);font-size:.78rem;
@@ -345,6 +346,30 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .tcat-btn.active{background:rgba(16,185,129,.12);border-color:rgba(16,185,129,.4);color:var(--green2)}
 #tools-count{font-size:.58rem;color:var(--text3);margin-left:auto;align-self:center}
 
+/* ════════════════════════════════
+   PLAYBOOKS TAB
+════════════════════════════════ */
+#playbooks-view{display:none;padding:8px 9px 20px}
+#pb-intro{font-size:.74rem;color:var(--text2);line-height:1.5;margin-bottom:10px;max-width:760px}
+.pb-filter-row{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px}
+.pb-nav-btn{background:var(--bg2);border:1px solid var(--border2);border-radius:4px;
+  color:var(--text2);font-family:var(--font);font-size:.7rem;padding:4px 9px;
+  cursor:pointer;transition:all .12s;letter-spacing:.04em;display:flex;align-items:center;gap:5px}
+.pb-nav-btn:hover{color:var(--text);border-color:var(--border2)}
+.pb-nav-btn.active{background:rgba(16,185,129,.12);border-color:rgba(16,185,129,.4);color:var(--green2)}
+.pb-nav-btn .pb-nav-cnt{font-size:.58rem;color:var(--text3)}
+.pb-block{margin-bottom:18px}
+.pb-head{margin-bottom:8px}
+.pb-title{font-size:1rem;font-weight:600;color:var(--green2);display:flex;align-items:center;gap:7px}
+.pb-title .pb-badge{font-size:.55rem;padding:1px 7px;border-radius:10px;letter-spacing:.08em}
+.pb-desc{font-size:.76rem;color:var(--text2);line-height:1.5;margin-top:4px;max-width:820px}
+.pb-step{display:flex;gap:9px;align-items:flex-start;margin-bottom:8px}
+.pb-step-num{flex-shrink:0;width:22px;height:22px;border-radius:50%;margin-top:4px;
+  background:rgba(16,185,129,.12);border:1px solid rgba(16,185,129,.35);color:var(--green2);
+  font-size:.66rem;font-weight:700;display:flex;align-items:center;justify-content:center}
+.pb-step-body{flex:1;min-width:0}
+.pb-step-note{font-size:.72rem;color:var(--text3);line-height:1.4;margin:1px 0 3px 1px}
+
 /* ── FOOTER ── */
 #footer{padding:10px 9px 5px;border-top:1px solid var(--border);font-size:.64rem;
   color:var(--text3);display:flex;flex-wrap:wrap;gap:8px}
@@ -423,6 +448,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 
 <div id="tabs">
   <button class="tab-btn active" data-tab="commands">⌁ COMMANDS <span id="tab-cmd-cnt"></span></button>
+  <button class="tab-btn" data-tab="playbooks">▤ PLAYBOOKS <span id="tab-pb-cnt"></span></button>
   <button class="tab-btn" data-tab="tools">⊕ ONLINE TOOLS <span id="tab-tools-cnt"></span></button>
 </div>
 
@@ -483,7 +509,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 
     <div id="footer">
       <span>CYBER_OPS_TERMINAL v6.1</span>
-      <span>1400 commands · 42 categories · 100 online tools</span>
+      <span>1436 commands · 42 categories · 102 online tools · 4 playbooks</span>
       <span>Ctrl+K search · ★ fav · ⧉ copy resolved</span>
       <span class="warn">⚠ Use only on authorized systems.</span>
     </div>
@@ -499,6 +525,13 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
       <button class="tcat-btn active" data-tcat="all">All</button>
     </div>
     <div id="tools-grid-wrap"></div>
+  </div>
+
+  <!-- PLAYBOOKS VIEW (scenario-driven, curated sequences) -->
+  <div id="playbooks-view" style="display:none;flex:1;min-width:0">
+    <div id="pb-intro">Sequências guiadas por cenário. Escolhe um playbook e segue os passos pela ordem indicada — cada passo é um comando real (copiar / ★ / clicar para filtrar as variáveis).</div>
+    <div class="pb-filter-row" id="pb-nav"></div>
+    <div id="pb-wrap"></div>
   </div>
 </div>
 
@@ -743,6 +776,7 @@ var TOOL_TAGS={
   'AD GPO':['ad','audit'],'AD Groups':['ad','audit'],
   'Kerberos':['ad','creds']
 };
+var PLAYBOOKS=[{"id": "domain-email-audit", "title": "Auditoria de domínio / email", "team": "blue", "glyph": "✉", "desc": "Verificar a postura de segurança de um domínio: autenticação de email (SPF/DKIM/DMARC), TLS de transporte, DNSSEC, CAA e domínios sósia (typosquatting).", "steps": [{"k": "osint::OSINT — WHOIS + passive DNS histórico", "note": "Contexto do domínio: registo, nameservers, histórico DNS."}, {"k": "recon::Email security — auditoria completa (SPF+DKIM+DMARC+MTA-STS+CAA+DNSSEC)", "note": "Visão geral de uma só vez — corre isto primeiro."}, {"k": "recon::SPF — verificar registo TXT", "note": "Confirmar que existe SPF e a política (~all vs -all)."}, {"k": "recon::SPF — contar DNS lookups (limite de 10)", "note": "SPF falha (permerror) se exceder 10 lookups."}, {"k": "recon::DKIM — verificar selector conhecido", "note": "Tentar selectors comuns (google, selector1, etc.)."}, {"k": "recon::DKIM — brute-force de selectors comuns", "note": "Caso os selectors óbvios não respondam."}, {"k": "recon::DMARC — verificar registo TXT e politica", "note": "Sem DMARC = spoofing trivial do domínio."}, {"k": "recon::DMARC — auditoria de seguranca (p=none, pct, rua/ruf)", "note": "p=none só monitoriza; confirmar quarantine/reject."}, {"k": "recon::DNSSEC — verificar DS e DNSKEY", "note": "Validação de integridade das respostas DNS."}, {"k": "recon::CAA — verificar restricao de CAs autorizadas", "note": "Sem CAA qualquer CA pode emitir certificados."}, {"k": "recon::MTA-STS — verificar policy de TLS para SMTP", "note": "Força TLS no transporte de email."}, {"k": "recon::BIMI — verificar logotipo de marca no email", "note": "Requer DMARC em quarantine/reject."}, {"k": "osint::OSINT — typosquatting + certificados crt.sh para dominios similares", "note": "Domínios sósia + certificados emitidos (CT logs)."}, {"k": "osint::dnstwist — typosquat domain detect", "note": "Permutações registadas do domínio (phishing/brand abuse)."}]}, {"id": "ad-takeover", "title": "AD takeover (red)", "team": "red", "glyph": "🩸", "desc": "Cadeia ofensiva típica de Active Directory: recon com BloodHound, ataques a Kerberos, poisoning/relay, movimento lateral e domain dominance.", "steps": [{"k": "adrecon::SharpHound — collector", "note": "Recolher dados do domínio para o BloodHound."}, {"k": "adrecon::BloodHound — Cypher: owned path to DA", "note": "Mapear o caminho mais curto até Domain Admin."}, {"k": "adrecon::Enumerate SPNs", "note": "Identificar contas de serviço kerberoastable."}, {"k": "adattack::AS-REP Roasting", "note": "Contas sem pré-autenticação Kerberos."}, {"k": "adattack::Kerberoasting — request TGS", "note": "Pedir TGS de contas com SPN e crackar offline."}, {"k": "adattack::Responder — LLMNR/NBT-NS poison", "note": "Capturar hashes NetNTLM na rede."}, {"k": "adattack::NTLM relay — ntlmrelayx", "note": "Reencaminhar autenticação para alvos sem assinatura SMB."}, {"k": "adattack::Pass-the-Hash — netexec", "note": "Reutilizar hash NTLM obtido para autenticar."}, {"k": "lateral::evil-winrm — pass hash", "note": "Shell remota via WinRM com o hash."}, {"k": "adattack::DCSync — secretsdump", "note": "Extrair hashes do domínio (inclui krbtgt)."}, {"k": "adattack::Golden Ticket — forge TGT", "note": "Persistência total com o hash do krbtgt."}]}, {"id": "ir-windows-initial", "title": "IR inicial Windows", "team": "ir", "glyph": "🚨", "desc": "Triagem rápida de um host Windows potencialmente comprometido — dados voláteis, persistência, rede, contas, recolha de memória e contenção.", "steps": [{"k": "ir_win::IR Win — triage one-liner (volatile data)", "note": "Captura inicial de dados voláteis."}, {"k": "ir_win::IR Win — processos suspeitos + paths", "note": "Processos a correr de paths anómalos."}, {"k": "ir_win::IR Win — conexoes de rede + processo owner", "note": "Conexões ativas e o processo que as criou."}, {"k": "ir_win::IR Win — utilizadores + logons recentes", "note": "Contas locais e logons recentes/anómalos."}, {"k": "ir_win::IR Win — persistencia completa (todos os vetores)", "note": "Run keys, serviços, tarefas, WMI, etc."}, {"k": "ir_win::IR Win — scheduled tasks shadow (ocultas)", "note": "Tarefas agendadas escondidas."}, {"k": "ir_win::IR Win — event log hunting critico", "note": "Eventos-chave (logons, criação de serviços, clear logs)."}, {"k": "ir_win::IR Win — credenciais expostas hunt", "note": "Credenciais em ficheiros/memória/registo."}, {"k": "ir_win::IR Win — memory acquisition (varios metodos)", "note": "Recolher RAM antes de mexer mais no host."}, {"k": "ir_win::IR Win — contencao + isolamento", "note": "Isolar o host preservando evidência."}, {"k": "ir_m365::IR M365 — message trace + email analysis", "note": "Se o vetor inicial foi phishing, seguir para o M365."}]}, {"id": "external-recon", "title": "Recon externo de alvo", "team": "red", "glyph": "◈", "desc": "Do domínio à superfície de ataque: OSINT, enumeração de subdomínios, varrimento de portas, fingerprinting de serviços e descoberta web.", "steps": [{"k": "osint::OSINT — WHOIS + passive DNS histórico", "note": "Pegada inicial do alvo."}, {"k": "osint::theHarvester — emails/subdomains/IPs", "note": "Emails, subdomínios e IPs a partir de fontes públicas."}, {"k": "recon::DNS — subdomain enum (amass)", "note": "Enumeração ativa/passiva de subdomínios."}, {"k": "osint::OSINT — crt.sh enum de subdominios via Certificate Transparency", "note": "Subdomínios revelados em logs de certificados."}, {"k": "osint::subwiz — AI-powered subdomain discovery", "note": "Descoberta adicional de subdomínios."}, {"k": "recon::Masscan — sweep range", "note": "Varrimento rápido de portas em gamas grandes."}, {"k": "recon::Nmap — full TCP fast scan", "note": "Todas as portas TCP nos hosts vivos."}, {"k": "recon::Nmap — service + script enum", "note": "Versões de serviço e scripts NSE."}, {"k": "recon::gobuster — vhost brute force", "note": "Virtual hosts no mesmo IP."}, {"k": "recon::gobuster — dir mode full options", "note": "Conteúdo/diretórios escondidos nas webapps."}, {"k": "osint::Shodan — search query", "note": "Serviços já indexados publicamente."}, {"k": "osint::GreyNoise — contexto de IP (scanner massivo vs malicioso direcionado)", "note": "Contexto de reputação dos IPs encontrados."}]}];
 var VAR_DEFS=[
   {k:'LHOST',    ph:'10.10.14.5',      grp:'network'},
   {k:'RHOST',    ph:'10.10.10.10',     grp:'network'},
@@ -808,6 +842,8 @@ var histPanel=gid('hist-panel'),histList=gid('hist-list');
 var varsPanel=gid('vars-panel'),varsGrid=gid('vars-grid');
 var mSel=gid('mobile-select');
 var toolsView=gid('tools-view'),toolsGridWrap=gid('tools-grid-wrap');
+var playbooksView=gid('playbooks-view'),pbWrap=gid('pb-wrap');
+var activePb=(typeof PLAYBOOKS!=='undefined'&&PLAYBOOKS.length)?PLAYBOOKS[0].id:null;
 var mainEl=gid('main');
 
 // Clock
@@ -838,16 +874,12 @@ for(var ti=0;ti<tabBtns.length;ti++){
     btn.addEventListener('click',function(){
       activeTab=btn.getAttribute('data-tab');
       for(var i=0;i<tabBtns.length;i++)tabBtns[i].className='tab-btn'+(tabBtns[i]===btn?' active':'');
-      if(activeTab==='commands'){
-        mainEl.style.display='';
-        toolsView.style.display='none';
-        gid('sidebar').style.display='';
-      } else {
-        mainEl.style.display='none';
-        toolsView.style.display='block';
-        gid('sidebar').style.display='none';
-        renderTools();
-      }
+      mainEl.style.display=activeTab==='commands'?'':'none';
+      gid('sidebar').style.display=activeTab==='commands'?'':'none';
+      toolsView.style.display=activeTab==='tools'?'block':'none';
+      playbooksView.style.display=activeTab==='playbooks'?'block':'none';
+      if(activeTab==='tools') renderTools();
+      if(activeTab==='playbooks') renderPlaybooks();
       updateLayout();
     });
   })(tabBtns[ti]);
@@ -867,6 +899,7 @@ function updateCounts(){
   var nE=gid('cnt-nix');if(nE)nE.textContent=nixN;
   gid('tab-cmd-cnt').textContent='\u00b7 '+COMMANDS.length;
   gid('tab-tools-cnt').textContent='\u00b7 '+ONLINE_TOOLS.length;
+  var pbCnt=gid('tab-pb-cnt'); if(pbCnt) pbCnt.textContent='\u00b7 '+PLAYBOOKS.length;
 }
 
 // Sidebar
@@ -1024,7 +1057,15 @@ function _renderGrid(){
   var frag=document.createDocumentFragment();
   for(var i=0;i<f.length;i++){
     try{
-    var e=f[i];
+    frag.appendChild(buildCmdCard(f[i],i));
+    }catch(err){}
+  }
+  cmdGrid.innerHTML=''; cmdGrid.appendChild(frag);
+  updateLayout();
+}
+
+// Build a single command card DOM element (shared by COMMANDS grid and PLAYBOOKS).
+function buildCmdCard(e,i){
     var key=e.cat+'::'+e.name;
     var isML=e.cmd.indexOf('\n')>=0;
     var tagHtml='';
@@ -1058,48 +1099,98 @@ function _renderGrid(){
           '<button class="cmd-btn inst-btn" data-action="install" data-key="'+esc(key)+'" title="Install instructions">\u2193</button>'+
         '</div>'+
       '</div>';
-    frag.appendChild(div);
-    }catch(err){}
-  }
-  cmdGrid.innerHTML=''; cmdGrid.appendChild(frag);
-  updateLayout();
+    return div;
 }
 
-cmdGrid.addEventListener('click',function(e){
+// Resolve a "cat::name" key to its COMMANDS entry.
+function findCmd(key){
+  for(var i=0;i<COMMANDS.length;i++){if(COMMANDS[i].cat+'::'+COMMANDS[i].name===key)return COMMANDS[i];}
+  return null;
+}
+
+// Shared click handler for any grid of command cards (uses e.currentTarget as the grid root).
+function cardClickHandler(e){
+  var grid=e.currentTarget;
   var btn=e.target;
-  while(btn&&btn!==cmdGrid){
+  while(btn&&btn!==grid){
     if(btn.nodeType===1&&btn.getAttribute&&btn.getAttribute('data-action')) break;
     btn=btn.parentNode;
   }
-  if(btn&&btn!==cmdGrid&&btn.getAttribute&&btn.getAttribute('data-action')){
+  if(btn&&btn!==grid&&btn.getAttribute&&btn.getAttribute('data-action')){
     var action=btn.getAttribute('data-action');
     var key=btn.getAttribute('data-key');
     if(!key) return;
-    var entry=null;
-    for(var i=0;i<COMMANDS.length;i++){if(COMMANDS[i].cat+'::'+COMMANDS[i].name===key){entry=COMMANDS[i];break;}}
+    var entry=findCmd(key);
     if(!entry) return;
     if(action==='copy') doCopy(entry);
     if(action==='fav'){
       if(favs[key]) delete favs[key]; else favs[key]=true;
       gid('cnt-favs').textContent=Object.keys(favs).length;
-      renderGrid();
+      renderGrid(); if(activeTab==='playbooks') renderPlaybooks();
     }
     if(action==='install') showInstall(entry);
     return;
   }
   var card=e.target;
-  while(card&&card!==cmdGrid){
+  while(card&&card!==grid){
     if(card.nodeType===1&&card.className&&card.className.indexOf('cmd-card')>=0) break;
     card=card.parentNode;
   }
-  if(!card||card===cmdGrid||!card.getAttribute) return;
+  if(!card||card===grid||!card.getAttribute) return;
   var ckey=card.getAttribute('data-key');
   if(!ckey) return;
-  var centry=null;
-  for(var j=0;j<COMMANDS.length;j++){if(COMMANDS[j].cat+'::'+COMMANDS[j].name===ckey){centry=COMMANDS[j];break;}}
+  var centry=findCmd(ckey);
   if(!centry) return;
   filterVarsByCommand(centry);
-});
+}
+cmdGrid.addEventListener('click',cardClickHandler);
+
+// ── PLAYBOOKS ──
+var PB_TEAM_LABEL={red:'RED',blue:'BLUE',ir:'IR',sysops:'SYSOPS',neutral:'GERAL'};
+function renderPlaybooks(){
+  // nav buttons
+  var nav=gid('pb-nav'); nav.innerHTML='';
+  PLAYBOOKS.forEach(function(p){
+    var b=document.createElement('button');
+    b.className='pb-nav-btn'+(p.id===activePb?' active':'');
+    b.innerHTML=(p.glyph?esc(p.glyph)+' ':'')+esc(p.title)+' <span class="pb-nav-cnt">'+p.steps.length+'</span>';
+    b.addEventListener('click',function(){activePb=p.id;renderPlaybooks();});
+    nav.appendChild(b);
+  });
+  // active playbook body
+  var pb=null;
+  for(var i=0;i<PLAYBOOKS.length;i++){if(PLAYBOOKS[i].id===activePb){pb=PLAYBOOKS[i];break;}}
+  if(!pb) pb=PLAYBOOKS[0];
+  pbWrap.innerHTML='';
+  if(!pb) return;
+  var block=document.createElement('div'); block.className='pb-block';
+  var head=document.createElement('div'); head.className='pb-head';
+  var team=pb.team||'neutral';
+  var badgeCls='cat-badge '+team;
+  head.innerHTML='<div class="pb-title">'+(pb.glyph?esc(pb.glyph)+' ':'')+esc(pb.title)+
+    ' <span class="pb-badge '+badgeCls+'">'+(PB_TEAM_LABEL[team]||team.toUpperCase())+'</span></div>'+
+    '<div class="pb-desc">'+esc(pb.desc||'')+'</div>';
+  block.appendChild(head);
+  pb.steps.forEach(function(st,idx){
+    var entry=findCmd(st.k);
+    var row=document.createElement('div'); row.className='pb-step';
+    var num=document.createElement('div'); num.className='pb-step-num'; num.textContent=(idx+1);
+    var body=document.createElement('div'); body.className='pb-step-body';
+    if(st.note){var note=document.createElement('div'); note.className='pb-step-note'; note.textContent=st.note; body.appendChild(note);}
+    if(entry){
+      body.appendChild(buildCmdCard(entry,idx));
+    } else {
+      var miss=document.createElement('div'); miss.className='cmd-card';
+      miss.style.cssText='padding:8px 10px;color:var(--text3);font-size:.75rem';
+      miss.textContent='⚠ comando em falta: '+st.k;
+      body.appendChild(miss);
+    }
+    row.appendChild(num); row.appendChild(body);
+    block.appendChild(row);
+  });
+  pbWrap.appendChild(block);
+}
+pbWrap.addEventListener('click',cardClickHandler);
 
 function showInstall(entry){
   var modal=gid('inst-modal');
@@ -1182,8 +1273,8 @@ function doCopy(entry){
   if(cmdHistory.length>25) cmdHistory.length=25;
   gid('cnt-hist').textContent=cmdHistory.length;
   if(showHist) buildHistList();
-  renderGrid();
-  setTimeout(function(){if(copiedKey===key){copiedKey=null;renderGrid();}},1200);
+  renderGrid(); if(activeTab==='playbooks') renderPlaybooks();
+  setTimeout(function(){if(copiedKey===key){copiedKey=null;renderGrid();if(activeTab==='playbooks')renderPlaybooks();}},1200);
 }
 
 // Online tools

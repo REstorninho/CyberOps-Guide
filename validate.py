@@ -244,6 +244,33 @@ def main():
         if t.get("url") and not t["url"].startswith("http"):
             warn(f"ONLINE_TOOLS[{n}] {t.get('name')!r}: url not http(s)")
 
+    # --- PLAYBOOKS: every step key must resolve to a real command ---
+    cmd_keys = {f"{c.get('cat')}::{c.get('name')}" for c in commands}
+    try:
+        playbooks = load_json_array(html, "var PLAYBOOKS=")
+        print(f"  (PLAYBOOKS: {len(playbooks)} playbooks)")
+    except ValueError:
+        playbooks = []  # PLAYBOOKS is optional
+    except Exception as e:
+        err(f"PLAYBOOKS failed to parse: {e}")
+        playbooks = []
+    pb_ids = set()
+    for n, p in enumerate(playbooks):
+        label = f"PLAYBOOKS[{n}] {p.get('id','?')!r}"
+        for field in ("id", "title", "steps"):
+            if field not in p:
+                err(f"{label}: missing field {field!r}")
+        if p.get("id") in pb_ids:
+            err(f"{label}: duplicate playbook id")
+        else:
+            pb_ids.add(p.get("id"))
+        for s, st in enumerate(p.get("steps", [])):
+            k = st.get("k")
+            if not k:
+                err(f"{label} step {s}: missing 'k'")
+            elif k not in cmd_keys:
+                err(f"{label} step {s}: key {k!r} not found in COMMANDS")
+
     if not errors:
         print("  no cross-reference errors")
 
