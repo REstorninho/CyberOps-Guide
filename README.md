@@ -152,6 +152,7 @@ Cada comando tem tags de severidade, OS e domínio:
 | Workflow | `apply` `osint` `kerberos` `users` |
 | AD | `ad` |
 | Domain | `recon` `web` `creds` `lateral` `privesc` `persist` `evasion` `misconfig` `audit` `cve` `forensics` `network` `cloud` `ssl` `threat` `exploit` |
+| SysOps / infra | `net` `infra` `perf` `dns` `auth` `iis` `fs` `rds` `pki` `hv` `tls` |
 
 ---
 
@@ -163,7 +164,7 @@ CyberOps.html          — ficheiro único (~1.3 MB)
 ├── CATEGORIES[]       — 42 definições de categoria (41 + "All Ops")
 ├── ONLINE_TOOLS[]     — 102 ferramentas web
 ├── TEAM_CATS{}        — mapeamento team → categorias
-├── TAG_MAP{}          — 31 tags com labels e CSS
+├── TAG_MAP{}          — 42 tags com labels e CSS
 ├── TOOL_TAGS{}        — ~310 ferramentas com domain tags
 └── VAR_DEFS[]         — 29 variáveis de sessão (com filtro de pesquisa próprio)
 ```
@@ -221,6 +222,7 @@ O projecto foi desenvolvido de forma iterativa com as seguintes milestones:
 - **v6.1.x** — Troubleshooting de rede: 8 cheat sheets de `Test-Connection` (ping, TCP port, jitter/packet loss, traceroute/MTU, sweep de hosts, fonte/IPv4-IPv6, monitorização contínua, erros comuns); variável `{HOST}`; alternativas `Test-NetConnection`/`TcpClient` para compatibilidade com Windows PowerShell 5.1 (`-TcpPort` só existe em PS7+); filtro de pesquisa no painel `SESSION_VARIABLES`; clique num comando filtra automaticamente o painel `SESSION_VARIABLES` para mostrar apenas as variáveis usadas nesse comando
 - **v6.2** — Auditoria de segurança de domínios/email: 13 cheat sheets de SPF, DKIM (verificação e brute-force de selectors), DMARC (registo e auditoria de política), DNSSEC, CAA, MTA-STS, TLS-RPT, BIMI e um script de auditoria completa (bash + PowerShell); 2 ferramentas online adicionadas (dmarcian DMARC Inspector, Mail-Tester)
 - **v6.3** — OSINT avançado: 15 cheat sheets — typosquatting + Certificate Transparency (`dnstwist`/`crt.sh`), trace de phishing M365 (`Get-MessageTrace`, categoria `ir_m365`), threat intel de IPs (GreyNoise, Censys, Onyphe), leak/breach search (LeakIX, DeHashed), recon de empresa (Hunter.io), OSINT de contas Google (`GHunt`), endpoints arquivados em massa (`waybackurls`+`gau`), metadata de documentos (`Metagoofil`), crawler OSINT (`Photon`), fingerprinting `.onion` (`OnionScan`), histórico de WHOIS (Whoxy)
+- **v6.4** — Qualidade & CI: `validate.py` (gate de integridade — parsing dos arrays, `node --check`, unicidade de `(cat, name)`, validação de categorias/tags/install) ligado a um GitHub Action (`.github/workflows/validate.yml`) que corre em cada push/PR; 11 tags órfãs (`net`, `infra`, `perf`, `dns`, `auth`, `iis`, `fs`, `rds`, `pki`, `hv`, `tls`) adicionadas ao `TAG_MAP` com badges/CSS próprios (antes renderizavam invisíveis); severidade em falta corrigida em 11 comandos
 
 ### Bugs Resolvidos (v6.1)
 - `</script>` dentro de strings JS fechava o bloco prematuramente

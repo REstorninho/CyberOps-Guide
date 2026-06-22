@@ -15,9 +15,12 @@ Guidance for AI agents (and humans) working in this repository. Read this **befo
 
 ```
 CyberOps-Guide/
-├── CyberOps.html   ← the entire application (data + UI + logic)
-├── README.md       ← user-facing docs + live statistics (keep in sync)
-└── CLAUDE.md       ← this file
+├── CyberOps.html              ← the entire application (data + UI + logic)
+├── validate.py               ← integrity gate (run before every commit)
+├── README.md                 ← user-facing docs + live statistics (keep in sync)
+├── CLAUDE.md                 ← this file
+└── .github/workflows/
+    └── validate.yml          ← CI: runs validate.py on push/PR
 ```
 
 ---
@@ -101,7 +104,16 @@ html = html[:end-1] + ',' + inner[1:-1] + html[end-1:]
 > **Past bug:** writing entries to a temp file and slicing `[1:-1]` on the raw read left a trailing newline, so `[1:-1]` stripped `[` and `\n` instead of `[` and `]`, producing a stray `]` and a `]];` double-close. **Always `.strip()` and assert the first/last chars are `[`/`]` before slicing.**
 
 ### Mandatory validation gate (run BEFORE every commit)
-1. **JSON validity** — re-extract each touched array with the bracket matcher and `json.loads()` it; print the new length and confirm the count is what you expect.
+**Run `python3 validate.py` — it performs the whole gate in one pass** and exits non-zero on any error:
+- Bracket-matches and parses every data array (`COMMANDS`, `CATEGORIES`, `ONLINE_TOOLS`) and prints counts.
+- `node --check` on the extracted `<script>` block (JS syntax).
+- Cross-references: `(cat, name)` uniqueness, `cat` exists in `CATEGORIES`, every tag exists in `TAG_MAP`, install field well-formed, CRLF rejection.
+- Warnings (non-failing): missing/duplicate severity, `{VARS}` not in `VAR_DEFS`, Windows-looking commands tagged `lin`.
+
+The same script runs in CI on every push/PR (`.github/workflows/validate.yml`). Errors **fail the build**; warnings are advisory. New unknown tags must be added to `TAG_MAP` (+ a `.tag-x` CSS class) or they render as invisible badges — the validator will flag them as errors.
+
+The two underlying manual checks (if you ever need them standalone):
+1. **JSON validity** — re-extract each touched array with the bracket matcher and `json.loads()` it; confirm the new count.
 2. **JS syntax** — extract the `<script>` content and run `node --check`:
    ```bash
    python3 -c "import re;h=open('CyberOps.html',encoding='utf-8').read();\
@@ -159,9 +171,10 @@ html = html[:end-1] + ',' + inner[1:-1] + html[end-1:]
 
 ## 6. Testing & verification
 
-There is **no test suite and no headless browser** available in this environment. Verification is limited to:
+There is **no headless browser** available in this environment. Automated verification is `python3 validate.py` (also wired into CI), which covers:
 1. `node --check` on the extracted script (syntax).
 2. Python `json.loads()` on each touched array (data validity + counts).
+3. Cross-reference integrity (unique keys, valid cats/tags, install format).
 
 UI/interaction behaviour **cannot be exercised here** — review the relevant JS by hand and **say so explicitly** rather than claiming a visual test occurred. When a change is purely behavioural (e.g. click handlers), describe what you reasoned through.
 
