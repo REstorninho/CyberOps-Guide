@@ -412,6 +412,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 
 <div id="tabs">
   <button class="tab-btn active" data-tab="commands">⌁ COMMANDS <span id="tab-cmd-cnt"></span></button>
+  <button class="tab-btn" data-tab="playbooks">▣ PLAYBOOKS <span id="tab-pb-cnt"></span></button>
   <button class="tab-btn" data-tab="tools">⊕ ONLINE TOOLS <span id="tab-tools-cnt"></span></button>
 </div>
 
@@ -471,8 +472,8 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
     </div>
 
     <div id="footer">
-      <span>CYBER_OPS_TERMINAL v6.1</span>
-      <span>1400 commands · 42 categories · 100 online tools</span>
+      <span>CYBER_OPS_TERMINAL v6.8</span>
+      <span>1489 commands · 68 playbooks · 102 online tools</span>
       <span>Ctrl+K search · ★ fav · ⧉ copy resolved</span>
       <span class="warn">⚠ Use only on authorized systems.</span>
     </div>
@@ -820,10 +821,13 @@ for(var ti=0;ti<tabBtns.length;ti++){
     btn.addEventListener('click',function(){
       activeTab=btn.getAttribute('data-tab');
       for(var i=0;i<tabBtns.length;i++)tabBtns[i].className='tab-btn'+(tabBtns[i]===btn?' active':'');
-      if(activeTab==='commands'){
+      if(activeTab==='commands'||activeTab==='playbooks'){
         mainEl.style.display='';
         toolsView.style.display='none';
         gid('sidebar').style.display='';
+        if(activeTab==='playbooks'){activeCat='all';query='';searchEl.value='';searchClear.style.display='none';}
+        buildNav();
+        renderGrid();
       } else {
         mainEl.style.display='none';
         toolsView.style.display='block';
@@ -849,6 +853,8 @@ function updateCounts(){
   var nE=gid('cnt-nix');if(nE)nE.textContent=nixN;
   gid('tab-cmd-cnt').textContent='\u00b7 '+COMMANDS.length;
   gid('tab-tools-cnt').textContent='\u00b7 '+ONLINE_TOOLS.length;
+  var pbN=0;COMMANDS.forEach(function(c){if(c.name.lastIndexOf('Playbook ',0)===0)pbN++;});
+  var pbE=gid('tab-pb-cnt');if(pbE)pbE.textContent='\u00b7 '+pbN;
 }
 
 // Sidebar
@@ -971,6 +977,7 @@ function getFiltered(){
   var oFil=osFilter||'all';
   var dFil=tagFilter||'all';
   return COMMANDS.filter(function(e){
+    if(activeTab==='playbooks'&&e.name.lastIndexOf('Playbook ',0)!==0) return false;
     if(aCat!=='all'&&e.cat!==aCat) return false;
     if(showFavs&&!favs[e.cat+'::'+e.name]) return false;
     if(tFil!=='all'){var a=TEAM_CATS[tFil];if(a&&a.indexOf(e.cat)<0)return false;}

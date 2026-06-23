@@ -12,8 +12,8 @@ O **CYBER\_OPS Terminal** é uma cheatsheet interactiva single-file com **1489 c
 Desenhado para ser usado em campo: abre no browser, funciona offline, copia comandos com substituição automática de variáveis de sessão.
 
 ```
-CYBER_OPS_TERMINAL v6.7
-1489 commands · 41 categories · 102 online tools
+CYBER_OPS_TERMINAL v6.8
+1489 commands · 68 playbooks · 102 online tools
 ```
 
 ---
@@ -220,6 +220,7 @@ O projecto foi desenvolvido de forma iterativa com as seguintes milestones:
 - **v6.1** — Estabilização: standardização de variáveis, install fields completos, ordenação por severidade, sistema de domain tags, bug fixes de runtime (mobile browser, anti-recursion, rendering resilience)
 - **v6.1.x** — Troubleshooting de rede: 8 cheat sheets de `Test-Connection` (ping, TCP port, jitter/packet loss, traceroute/MTU, sweep de hosts, fonte/IPv4-IPv6, monitorização contínua, erros comuns); variável `{HOST}`; alternativas `Test-NetConnection`/`TcpClient` para compatibilidade com Windows PowerShell 5.1 (`-TcpPort` só existe em PS7+); filtro de pesquisa no painel `SESSION_VARIABLES`; clique num comando filtra automaticamente o painel `SESSION_VARIABLES` para mostrar apenas as variáveis usadas nesse comando
 - **v6.2** — Auditoria de segurança de domínios/email: 13 cheat sheets de SPF, DKIM (verificação e brute-force de selectors), DMARC (registo e auditoria de política), DNSSEC, CAA, MTA-STS, TLS-RPT, BIMI e um script de auditoria completa (bash + PowerShell); 2 ferramentas online adicionadas (dmarcian DMARC Inspector, Mail-Tester)
+- **v6.8** — Separador **PLAYBOOKS** dedicado: novo tab no topo (ao lado de `COMMANDS` e `ONLINE TOOLS`) que mostra apenas os 68 playbooks (nomes a começar por `Playbook`). Reutiliza a vista de comandos — respeita a navegação por categoria e os filtros de OS (WIN/NIX). Contador próprio no tab. Rodapé atualizado (v6.8 · 1489 commands · 68 playbooks). Os playbooks continuam também acessíveis no separador `COMMANDS`
 - **v6.7** — Playbooks de Troubleshooting de containers, BD e rede Linux (10 novos, +10 comandos → 1489), mesmo formato por fases: Docker (CrashLoop, exit codes, OOM, disco), Kubernetes (Pending/CrashLoopBackOff/ImagePullBackOff, node NotReady, svc/endpoints), Redis (conexão, maxmemory/evictions, persistência), MongoDB (replica set sem primário, queries lentas), chrony/NTP (sincronização de tempo), certbot/Let's Encrypt (renovação, desafios HTTP-01/DNS-01), NetworkManager/systemd-networkd (interface não sobe), performance de rede fim-a-fim (retransmissões TCP, MTU/MSS, PMTUD black hole), NFS (hang, stale handle, root_squash), Samba/CIFS (versão SMB, ACL, SELinux)
 - **v6.6** — Playbooks de Troubleshooting de roles adicionais (10 novos, +10 comandos → 1479), mesmo formato por fases. **Windows Server**: DFS Replication (DFS-R backlog/conflitos/SYSVOL), AD FS (federação SSO, cert token-signing), Storage Spaces / iSCSI (disco degradado, reparação, MPIO), NLB (convergência, unicast/multicast). **Linux**: Nginx/Apache (502/504, upstream, SELinux), MySQL/MariaDB (conexão, max_connections, replicação), PostgreSQL (pg_hba, too many clients, locks), BIND/named (SERVFAIL, zonas, recursão/DNSSEC), Postfix (fila/deferred, relay, DNS MX), HAProxy/keepalived (backends DOWN, VIP failover, split-brain VRRP)
 - **v6.5** — Playbooks de Troubleshooting de roles Windows Server (7 novos, +7 comandos → 1469), mesmo formato por fases: WSUS / Windows Update server (clientes não reportam, WsusPool), DFS Namespaces (referrals/targets), RDS / RD Licensing (grace period, CALs), Exchange Server (mail flow / filas / back pressure), SQL Server (conectividade / login failed 18456), NPS / RADIUS (802.1x/VPN/Wi-Fi), WinRM / PowerShell Remoting (listeners, TrustedHosts, double-hop)
