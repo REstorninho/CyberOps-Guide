@@ -65,6 +65,11 @@ Sequências guiadas por cenário — em vez de procurar por categoria/tag, entra
 | 🩸 AD takeover (red) | BloodHound → Kerberoasting/AS-REP → poisoning/relay → lateral → DCSync/Golden Ticket |
 | 🚨 IR inicial Windows | Triagem de host comprometido: voláteis, persistência, rede, contas, memória, contenção |
 | ◈ Recon externo de alvo | OSINT → subdomínios → portas → fingerprinting → descoberta web |
+| 🖥 Saúde de AD / Windows Server | FSMO, replicação, GPOs, SYSVOL, patches e performance — checklist de sysadmin |
+| 🌐 Troubleshooting de rede end-to-end | Conectividade → DNS → portas → firewall → captura de pacotes → throughput |
+| 🐳 Container & Kubernetes — security audit | Imagens vulneráveis, RBAC, CIS benchmark, escape/privesc, IaC e CI/CD |
+| 🐧 Linux Server — hardening & audit | SSH, firewall, kernel, patches, SELinux, sudoers — com relatório consolidado |
+| 🕵 Threat Hunting & Log Triage | Logons suspeitos, LOLBins, beaconing, persistência — triagem de SOC |
 
 Os passos referenciam comandos por `cat::name` (zero duplicação); o `validate.py` garante que todas as referências apontam para comandos existentes.
 
@@ -175,7 +180,7 @@ CyberOps.html          — ficheiro único (~1.3 MB)
 ├── COMMANDS[]         — 1436 entradas JSON inline
 ├── CATEGORIES[]       — 42 definições de categoria (41 + "All Ops")
 ├── ONLINE_TOOLS[]     — 102 ferramentas web
-├── PLAYBOOKS[]        — 4 sequências por cenário (referências cat::name)
+├── PLAYBOOKS[]        — 9 sequências por cenário (referências cat::name)
 ├── TEAM_CATS{}        — mapeamento team → categorias
 ├── TAG_MAP{}          — 42 tags com labels e CSS
 ├── TOOL_TAGS{}        — ~310 ferramentas com domain tags
@@ -237,6 +242,7 @@ O projecto foi desenvolvido de forma iterativa com as seguintes milestones:
 - **v6.3** — OSINT avançado: 15 cheat sheets — typosquatting + Certificate Transparency (`dnstwist`/`crt.sh`), trace de phishing M365 (`Get-MessageTrace`, categoria `ir_m365`), threat intel de IPs (GreyNoise, Censys, Onyphe), leak/breach search (LeakIX, DeHashed), recon de empresa (Hunter.io), OSINT de contas Google (`GHunt`), endpoints arquivados em massa (`waybackurls`+`gau`), metadata de documentos (`Metagoofil`), crawler OSINT (`Photon`), fingerprinting `.onion` (`OnionScan`), histórico de WHOIS (Whoxy)
 - **v6.4** — Qualidade & CI: `validate.py` (gate de integridade — parsing dos arrays, `node --check`, unicidade de `(cat, name)`, validação de categorias/tags/install) ligado a um GitHub Action (`.github/workflows/validate.yml`) que corre em cada push/PR; 11 tags órfãs (`net`, `infra`, `perf`, `dns`, `auth`, `iis`, `fs`, `rds`, `pki`, `hv`, `tls`) adicionadas ao `TAG_MAP` com badges/CSS próprios (antes renderizavam invisíveis); severidade em falta corrigida em 11 comandos
 - **v6.5** — Descoberta por cenário: novo separador **PLAYBOOKS** com 4 sequências curadas (Auditoria de domínio/email, AD takeover, IR inicial Windows, Recon externo de alvo). Camada de índice por cima dos comandos (array `PLAYBOOKS` só com referências `cat::name`, zero duplicação); reutiliza os cards existentes (copy/fav/filtro de variáveis); `validate.py` valida que cada passo aponta para um comando real
+- **v6.6** — Playbooks de sysadmin/cyberops: 5 novas sequências (Saúde de AD/Windows Server, Troubleshooting de rede end-to-end, Container & Kubernetes security audit, Linux Server hardening & audit, Threat Hunting & Log Triage), totalizando 9 playbooks; mesma garantia do `validate.py` de que todos os passos apontam para comandos reais
 
 ### Bugs Resolvidos (v6.1)
 - `</script>` dentro de strings JS fechava o bloco prematuramente
