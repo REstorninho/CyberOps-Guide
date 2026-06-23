@@ -7,13 +7,13 @@
 
 ## Visão Geral
 
-O **CYBER\_OPS Terminal** é uma cheatsheet interactiva single-file com **1479 comandos** organizados em **41 categorias**, cobrindo toda a stack de operações de segurança — desde recon ofensivo até hardening defensivo, passando por AD attacks, Kerberos, forense, IR, cloud, container security, DevSecOps, mobile, OT/ICS, troubleshooting e reporting.
+O **CYBER\_OPS Terminal** é uma cheatsheet interactiva single-file com **1489 comandos** organizados em **41 categorias**, cobrindo toda a stack de operações de segurança — desde recon ofensivo até hardening defensivo, passando por AD attacks, Kerberos, forense, IR, cloud, container security, DevSecOps, mobile, OT/ICS, troubleshooting e reporting.
 
 Desenhado para ser usado em campo: abre no browser, funciona offline, copia comandos com substituição automática de variáveis de sessão.
 
 ```
-CYBER_OPS_TERMINAL v6.6
-1479 commands · 41 categories · 102 online tools
+CYBER_OPS_TERMINAL v6.7
+1489 commands · 41 categories · 102 online tools
 ```
 
 ---
@@ -116,14 +116,14 @@ Não requer servidor, Python, Node, nem qualquer runtime.
 | `ir_m365` | IR M365 / Entra |
 | `ir_ad` | IR Active Directory |
 
-### ⚙ SYSOPS (7 categorias · 432 comandos)
+### ⚙ SYSOPS (7 categorias · 442 comandos)
 
 | ID | Categoria |
 |---|---|
 | `sysadmin` | Sysadmin |
 | `winsrv` | Windows Server (AD/DNS/DHCP/IIS/PKI/RDS/Hyper-V) |
 | `netadmin` | Network Admin |
-| `troubleshoot` | Troubleshooting (inclui diagnóstico `Test-Connection` e 46 playbooks Windows/Linux, com forte cobertura de Active Directory, roles Windows Server e serviços Linux) |
+| `troubleshoot` | Troubleshooting (inclui diagnóstico `Test-Connection` e 56 playbooks Windows/Linux, com forte cobertura de Active Directory, roles Windows Server, serviços Linux, containers e rede) |
 | `cisco` | Cisco IOS |
 | `container` | Containers (Docker/Kubernetes) |
 | `reporting` | Reporting (PwnDoc/CVSS/Dradis) |
@@ -220,6 +220,7 @@ O projecto foi desenvolvido de forma iterativa com as seguintes milestones:
 - **v6.1** — Estabilização: standardização de variáveis, install fields completos, ordenação por severidade, sistema de domain tags, bug fixes de runtime (mobile browser, anti-recursion, rendering resilience)
 - **v6.1.x** — Troubleshooting de rede: 8 cheat sheets de `Test-Connection` (ping, TCP port, jitter/packet loss, traceroute/MTU, sweep de hosts, fonte/IPv4-IPv6, monitorização contínua, erros comuns); variável `{HOST}`; alternativas `Test-NetConnection`/`TcpClient` para compatibilidade com Windows PowerShell 5.1 (`-TcpPort` só existe em PS7+); filtro de pesquisa no painel `SESSION_VARIABLES`; clique num comando filtra automaticamente o painel `SESSION_VARIABLES` para mostrar apenas as variáveis usadas nesse comando
 - **v6.2** — Auditoria de segurança de domínios/email: 13 cheat sheets de SPF, DKIM (verificação e brute-force de selectors), DMARC (registo e auditoria de política), DNSSEC, CAA, MTA-STS, TLS-RPT, BIMI e um script de auditoria completa (bash + PowerShell); 2 ferramentas online adicionadas (dmarcian DMARC Inspector, Mail-Tester)
+- **v6.7** — Playbooks de Troubleshooting de containers, BD e rede Linux (10 novos, +10 comandos → 1489), mesmo formato por fases: Docker (CrashLoop, exit codes, OOM, disco), Kubernetes (Pending/CrashLoopBackOff/ImagePullBackOff, node NotReady, svc/endpoints), Redis (conexão, maxmemory/evictions, persistência), MongoDB (replica set sem primário, queries lentas), chrony/NTP (sincronização de tempo), certbot/Let's Encrypt (renovação, desafios HTTP-01/DNS-01), NetworkManager/systemd-networkd (interface não sobe), performance de rede fim-a-fim (retransmissões TCP, MTU/MSS, PMTUD black hole), NFS (hang, stale handle, root_squash), Samba/CIFS (versão SMB, ACL, SELinux)
 - **v6.6** — Playbooks de Troubleshooting de roles adicionais (10 novos, +10 comandos → 1479), mesmo formato por fases. **Windows Server**: DFS Replication (DFS-R backlog/conflitos/SYSVOL), AD FS (federação SSO, cert token-signing), Storage Spaces / iSCSI (disco degradado, reparação, MPIO), NLB (convergência, unicast/multicast). **Linux**: Nginx/Apache (502/504, upstream, SELinux), MySQL/MariaDB (conexão, max_connections, replicação), PostgreSQL (pg_hba, too many clients, locks), BIND/named (SERVFAIL, zonas, recursão/DNSSEC), Postfix (fila/deferred, relay, DNS MX), HAProxy/keepalived (backends DOWN, VIP failover, split-brain VRRP)
 - **v6.5** — Playbooks de Troubleshooting de roles Windows Server (7 novos, +7 comandos → 1469), mesmo formato por fases: WSUS / Windows Update server (clientes não reportam, WsusPool), DFS Namespaces (referrals/targets), RDS / RD Licensing (grace period, CALs), Exchange Server (mail flow / filas / back pressure), SQL Server (conectividade / login failed 18456), NPS / RADIUS (802.1x/VPN/Wi-Fi), WinRM / PowerShell Remoting (listeners, TrustedHosts, double-hop)
 - **v6.4** — Playbooks de Troubleshooting de serviços (15 novos, +15 comandos → 1462), estruturados por fases (Sintoma → Diagnóstico → Causa → Correção → Validação). **Active Directory** (`troubleshoot`): canal seguro/Netlogon partido, falha de autenticação Kerberos (KDC/SPN/clock skew), LDAP/LDAPS sem resposta, sincronização de tempo W32Time, origem de bloqueios de conta, Catálogo Global indisponível, base de dados NTDS (dirty shutdown/USN rollback), registo dinâmico DNS do DC (SRV), relação de confiança (trust) entre domínios, promoção/despromoção de DC + metadata cleanup. **Outros serviços Windows Server**: DHCP não atribui endereços, Print Spooler em crash, Failover Cluster (nó/recurso offline), Hyper-V VM não arranca, certificados AD CS / smartcard
