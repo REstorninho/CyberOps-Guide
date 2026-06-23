@@ -7,13 +7,13 @@
 
 ## Visão Geral
 
-O **CYBER\_OPS Terminal** é uma cheatsheet interactiva single-file com **1447 comandos** organizados em **41 categorias**, cobrindo toda a stack de operações de segurança — desde recon ofensivo até hardening defensivo, passando por AD attacks, Kerberos, forense, IR, cloud, container security, DevSecOps, mobile, OT/ICS, troubleshooting e reporting.
+O **CYBER\_OPS Terminal** é uma cheatsheet interactiva single-file com **1462 comandos** organizados em **41 categorias**, cobrindo toda a stack de operações de segurança — desde recon ofensivo até hardening defensivo, passando por AD attacks, Kerberos, forense, IR, cloud, container security, DevSecOps, mobile, OT/ICS, troubleshooting e reporting.
 
 Desenhado para ser usado em campo: abre no browser, funciona offline, copia comandos com substituição automática de variáveis de sessão.
 
 ```
-CYBER_OPS_TERMINAL v6.3
-1447 commands · 41 categories · 102 online tools
+CYBER_OPS_TERMINAL v6.4
+1462 commands · 41 categories · 102 online tools
 ```
 
 ---
@@ -116,14 +116,14 @@ Não requer servidor, Python, Node, nem qualquer runtime.
 | `ir_m365` | IR M365 / Entra |
 | `ir_ad` | IR Active Directory |
 
-### ⚙ SYSOPS (7 categorias · 400 comandos)
+### ⚙ SYSOPS (7 categorias · 415 comandos)
 
 | ID | Categoria |
 |---|---|
 | `sysadmin` | Sysadmin |
 | `winsrv` | Windows Server (AD/DNS/DHCP/IIS/PKI/RDS/Hyper-V) |
 | `netadmin` | Network Admin |
-| `troubleshoot` | Troubleshooting (inclui diagnóstico `Test-Connection` e 14 playbooks Windows/Linux) |
+| `troubleshoot` | Troubleshooting (inclui diagnóstico `Test-Connection` e 29 playbooks Windows/Linux, com forte cobertura de serviços Active Directory) |
 | `cisco` | Cisco IOS |
 | `container` | Containers (Docker/Kubernetes) |
 | `reporting` | Reporting (PwnDoc/CVSS/Dradis) |
@@ -220,6 +220,7 @@ O projecto foi desenvolvido de forma iterativa com as seguintes milestones:
 - **v6.1** — Estabilização: standardização de variáveis, install fields completos, ordenação por severidade, sistema de domain tags, bug fixes de runtime (mobile browser, anti-recursion, rendering resilience)
 - **v6.1.x** — Troubleshooting de rede: 8 cheat sheets de `Test-Connection` (ping, TCP port, jitter/packet loss, traceroute/MTU, sweep de hosts, fonte/IPv4-IPv6, monitorização contínua, erros comuns); variável `{HOST}`; alternativas `Test-NetConnection`/`TcpClient` para compatibilidade com Windows PowerShell 5.1 (`-TcpPort` só existe em PS7+); filtro de pesquisa no painel `SESSION_VARIABLES`; clique num comando filtra automaticamente o painel `SESSION_VARIABLES` para mostrar apenas as variáveis usadas nesse comando
 - **v6.2** — Auditoria de segurança de domínios/email: 13 cheat sheets de SPF, DKIM (verificação e brute-force de selectors), DMARC (registo e auditoria de política), DNSSEC, CAA, MTA-STS, TLS-RPT, BIMI e um script de auditoria completa (bash + PowerShell); 2 ferramentas online adicionadas (dmarcian DMARC Inspector, Mail-Tester)
+- **v6.4** — Playbooks de Troubleshooting de serviços (15 novos, +15 comandos → 1462), estruturados por fases (Sintoma → Diagnóstico → Causa → Correção → Validação). **Active Directory** (`troubleshoot`): canal seguro/Netlogon partido, falha de autenticação Kerberos (KDC/SPN/clock skew), LDAP/LDAPS sem resposta, sincronização de tempo W32Time, origem de bloqueios de conta, Catálogo Global indisponível, base de dados NTDS (dirty shutdown/USN rollback), registo dinâmico DNS do DC (SRV), relação de confiança (trust) entre domínios, promoção/despromoção de DC + metadata cleanup. **Outros serviços Windows Server**: DHCP não atribui endereços, Print Spooler em crash, Failover Cluster (nó/recurso offline), Hyper-V VM não arranca, certificados AD CS / smartcard
 - **v6.3** — Playbooks de IR e Troubleshooting (26 novos, +26 comandos → 1447): estruturados por fases (IR: Deteção → Contenção → Erradicação → Recuperação; TS: Sintoma → Diagnóstico → Causa → Correção → Validação). **IR Windows** (`ir_win`): ransomware, conta admin/serviço comprometida, web shell em IIS, intrusão RDP + movimento lateral, beacon C2/malware persistente, exfiltração de dados. **IR Linux** (`ir_lin`): servidor comprometido (ciclo completo), cryptominer, web shell PHP (LAMP/LEMP), acesso SSH não autorizado, rootkit de kernel, container/Docker comprometido. **TS Windows** (`troubleshoot`): boot, CPU alta, fuga de memória, disco cheio/I/O, IIS app pool, replicação AD, servidor DNS. **TS Linux** (`troubleshoot`): boot (GRUB/initramfs/fstab), load/CPU, OOM killer, disco/inodes, serviço systemd, latência de I/O, conectividade/DNS
 
 ### Bugs Resolvidos (v6.1)
