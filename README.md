@@ -14,8 +14,8 @@ Dos 1527 comandos, **106 são playbooks ponta-a-ponta** estruturados por fases (
 Desenhado para ser usado em campo: abre no browser, funciona offline, copia comandos com substituição automática de variáveis de sessão.
 
 ```
-CYBER_OPS_TERMINAL v7.0
-1527 commands · 106 playbooks · 102 online tools
+CYBER_OPS_TERMINAL v7.1
+1527 commands · 106 playbooks · 150 online tools
 ```
 
 ---
@@ -67,7 +67,7 @@ Todos os filtros (Team, OS, Domain, pesquisa, favoritos) também se aplicam dent
 - **★ Favoritos** — marcar comandos para acesso rápido
 - **⏱ Histórico** — últimos comandos copiados
 - **⬇ Install modal** — instruções de instalação por comando
-- **Online Tools** — 102 ferramentas web organizadas por categoria
+- **Online Tools** — 150 ferramentas web organizadas por categoria (inclui sandboxes de malware)
 - **Clock de sessão** — tempo activo desde abertura
 
 ---
@@ -144,7 +144,7 @@ Todos os filtros (Team, OS, Domain, pesquisa, favoritos) também se aplicam dent
 | `osint` | OSINT |
 | `misc` | Misc & Arsenal |
 
-> Online Tools (102 ferramentas web) usa um conjunto separado de categorias (`recon_osint`, `dns`, `ssl`, `web_sec`, `vuln`, `threat`, `coding`, `network`, `privacy`, `training`, `breach`) — não conta para os 41 acima.
+> Online Tools (150 ferramentas web) usa um conjunto separado de categorias (`recon_osint`, `dns`, `ssl`, `web_sec`, `vuln`, `threat`, `sandbox`, `breach`, `coding`, `network`, `privacy`, `training`) — não conta para os 41 acima.
 
 ---
 
@@ -170,7 +170,7 @@ Cada comando tem tags de severidade, OS e domínio:
 CyberOps.html          — ficheiro único (~1.3 MB)
 ├── COMMANDS[]         — 1527 entradas JSON inline (106 são playbooks)
 ├── CATEGORIES[]       — 42 definições de categoria (41 + "All Ops")
-├── ONLINE_TOOLS[]     — 102 ferramentas web
+├── ONLINE_TOOLS[]     — 150 ferramentas web (12 categorias, incl. Sandbox / Malware)
 ├── TEAM_CATS{}        — mapeamento team → categorias
 ├── TAG_MAP{}          — 31 tags com labels e CSS
 ├── TOOL_TAGS{}        — ~310 ferramentas com domain tags
@@ -224,6 +224,7 @@ Pentest e red team sem autorização é ilegal.
 
 O projecto foi desenvolvido de forma iterativa com as seguintes milestones:
 
+- **v7.1** — Expansão de **Online Tools** (48 novas, 102 → 150) e nova categoria **Sandbox / Malware**. Sandboxes de malware (Any.Run, Hybrid Analysis, Joe Sandbox, Tria.ge, Intezer, FileScan.io, MalAPI.io); CVE/Exploits (GTFOBins, LOLBAS, CISA KEV, endoflife.date, GitHub Advisory DB, OpenCVE, VulDB); Coding (revshells.com, hashes.com, CrackStation, dCode, IT-Tools); Threat Intel (AbuseIPDB, AlienVault OTX, Talos, IBM X-Force, ThreatMiner); Recon/OSINT (Hunter.io, Wayback Machine, Epieos, grep.app, WhatsMyName); Breach (BreachDirectory, Snusbase, LeakCheck, Mozilla Monitor, psbdmp); DNS (DNSViz, Hurricane Electric BGP, ICANN Lookup); Network (webhook.site, GRC ShieldsUP!, Beeceptor); Training (VulnHub, OverTheWire, CTFtime, picoCTF, CyberDefenders, LetsDefend, Blue Team Labs Online, pwn.college)
 - **v7.0** — Filtro **☁ CLOUD** no grupo de OS (ao lado de WIN/NIX), que corresponde à tag `cloud` e expõe os playbooks agnósticos de SO no mesmo sítio que Windows/Linux. Rodapé atualizado (v7.0 · 1527 commands · 106 playbooks)
 - **v6.9b** — Playbooks de **análise forense Windows** (8 novos, +8 comandos → 1527), perspetiva de analista (`forensics`): análise de execução de programas (Prefetch/Amcache/ShimCache/SRUM/BAM/UserAssist), análise do registo (RegRipper/RECmd), timeline do sistema de ficheiros / `$MFT`+`$J`+`$LogFile` (com deteção de timestomping), análise de Event Logs (EvtxECmd + mapa de Event IDs), atividade do utilizador (ShellBags/LNK/Jump Lists), USB / dispositivos removíveis, browser & email forensics (Hindsight/libpff) e anti-forense (limpeza de logs, ADS, file carving). Usa a suite Eric Zimmerman, RegRipper, KAPE e Hindsight
 - **v6.9a** — Expansão **CyberOps & IT** (30 novos, +30 comandos → 1519), mesmo formato por fases. **Cloud & Identidade IR**: BEC M365/Entra, OAuth illicit consent, conta Entra + MFA fatigue, credenciais AWS IAM, bucket S3 exposto, identidade Azure / Golden SAML. **Threat Hunting** (`hunt`): movimento lateral, persistência Win/Linux, beaconing C2, credential dumping (LSASS). **DFIR/Forense**: aquisição de disco + cadeia de custódia, RAM (Volatility), triagem KAPE/Velociraptor, super-timeline (Plaso). **Phishing**: triagem de email, campanha em massa. **Network Defense**: DDoS, firewall/WAF sob ataque, exfiltração. **Vuln & Patching**: resposta a 0-day crítico, patch de emergência. **Resiliência & Ops**: DR/validação de restore, baseline CIS, certificados a expirar. **Mais Troubleshooting**: IPsec VPN, Veeam, VMware ESXi, latência/packet loss, Group Policy
