@@ -7,13 +7,15 @@
 
 ## Visão Geral
 
-O **CYBER\_OPS Terminal** é uma cheatsheet interactiva single-file com **1489 comandos** organizados em **41 categorias**, cobrindo toda a stack de operações de segurança — desde recon ofensivo até hardening defensivo, passando por AD attacks, Kerberos, forense, IR, cloud, container security, DevSecOps, mobile, OT/ICS, troubleshooting e reporting.
+O **CYBER\_OPS Terminal** é uma cheatsheet interactiva single-file com **1527 comandos** organizados em **41 categorias**, cobrindo toda a stack de operações de segurança — desde recon ofensivo até hardening defensivo, passando por AD attacks, Kerberos, forense, IR, cloud, container security, DevSecOps, mobile, OT/ICS, troubleshooting e reporting.
+
+Dos 1527 comandos, **106 são playbooks ponta-a-ponta** estruturados por fases (IR: Deteção → Contenção → Erradicação → Recuperação; TS: Sintoma → Diagnóstico → Causa → Correção → Validação), acessíveis no separador dedicado **PLAYBOOKS**.
 
 Desenhado para ser usado em campo: abre no browser, funciona offline, copia comandos com substituição automática de variáveis de sessão.
 
 ```
-CYBER_OPS_TERMINAL v6.8
-1489 commands · 68 playbooks · 102 online tools
+CYBER_OPS_TERMINAL v7.0
+1527 commands · 106 playbooks · 102 online tools
 ```
 
 ---
@@ -35,8 +37,12 @@ Não requer servidor, Python, Node, nem qualquer runtime.
 | Filtro | Opções |
 |---|---|
 | **Team** | ALL · RED · BLUE · OSINT · OPS · IR |
-| **OS** | ALL OS · WIN · NIX |
+| **OS** | ALL OS · WIN · NIX · CLOUD |
 | **Domain** | ALL · RECON · WEB · CREDS · LATERAL · PRIVESC · PERSIST · EVASION · MISCONFIG · AUDIT · CVE · FORENSICS · NETWORK · CLOUD · SSL · THREAT · EXPLOIT |
+
+> O filtro **CLOUD** no grupo de OS corresponde aos comandos/playbooks com a tag `cloud` (agnósticos de SO — ex.: IR de M365/Entra, AWS, Azure), que não têm tag `win`/`lin` e por isso não apareciam em WIN/NIX.
+
+Todos os filtros (Team, OS, Domain, pesquisa, favoritos) também se aplicam dentro do separador **PLAYBOOKS**.
 
 ### Pesquisa
 - **Ctrl+K** — focar a barra de pesquisa
@@ -57,6 +63,7 @@ Não requer servidor, Python, Node, nem qualquer runtime.
 | Cloud | `{IMAGE}` |
 
 ### Outros
+- **▣ Playbooks** — separador dedicado com os 106 playbooks ponta-a-ponta (nomes a começar por `Playbook`)
 - **★ Favoritos** — marcar comandos para acesso rápido
 - **⏱ Histórico** — últimos comandos copiados
 - **⬇ Install modal** — instruções de instalação por comando
@@ -69,7 +76,7 @@ Não requer servidor, Python, Node, nem qualquer runtime.
 
 41 categorias agrupadas por `team` (o mesmo campo usado pelo filtro Team da app):
 
-### 🔴 RED — Offensive (20 categorias · 582 comandos)
+### 🔴 RED — Offensive (20 categorias · 587 comandos)
 
 | ID | Categoria |
 |---|---|
@@ -94,36 +101,38 @@ Não requer servidor, Python, Node, nem qualquer runtime.
 | `mobile` | Mobile |
 | `ot_ics` | OT / ICS |
 
-### 🔵 BLUE — Defensive (8 categorias · 307 comandos)
+### 🔵 BLUE — Defensive (8 categorias · 330 comandos)
 
 | ID | Categoria |
 |---|---|
 | `logs` | Log Analysis |
-| `hunt` | Threat Hunting |
-| `forensics` | Forensics & DFIR |
+| `hunt` | Threat Hunting (inclui 5 playbooks de caça: movimento lateral, persistência Win/Linux, beaconing C2, credential dumping) |
+| `forensics` | Forensics & DFIR (inclui 8 playbooks de análise forense Windows + 3 DFIR de aquisição) |
 | `dfir` | IR & Memory |
-| `netdef` | Network Defense |
-| `harden` | Hardening |
+| `netdef` | Network Defense (inclui 3 playbooks: DDoS, firewall/WAF sob ataque, exfiltração) |
+| `harden` | Hardening (inclui playbooks de baseline CIS e patch de emergência) |
 | `devsecops` | DevSecOps |
-| `vulnscan` | Vuln Scan |
+| `vulnscan` | Vuln Scan (inclui playbook de resposta a 0-day crítico) |
 
-### 🚨 IR — Incident Response (4 categorias · 81 comandos)
+### 🚨 IR — Incident Response (4 categorias · 84 comandos)
 
 | ID | Categoria |
 |---|---|
 | `ir_win` | IR Windows (inclui 6 playbooks ponta-a-ponta) |
 | `ir_lin` | IR Linux (inclui 6 playbooks ponta-a-ponta) |
-| `ir_m365` | IR M365 / Entra |
+| `ir_m365` | IR M365 / Entra (inclui 3 playbooks: BEC, OAuth illicit consent, conta Entra + MFA fatigue) |
 | `ir_ad` | IR Active Directory |
 
-### ⚙ SYSOPS (7 categorias · 442 comandos)
+> Os playbooks de **Cloud & Identidade** repartem-se também pela categoria `cloud` (AWS IAM, S3, Azure/Golden SAML) e são todos alcançáveis pelo filtro **CLOUD**.
+
+### ⚙ SYSOPS (7 categorias · 449 comandos)
 
 | ID | Categoria |
 |---|---|
 | `sysadmin` | Sysadmin |
 | `winsrv` | Windows Server (AD/DNS/DHCP/IIS/PKI/RDS/Hyper-V) |
 | `netadmin` | Network Admin |
-| `troubleshoot` | Troubleshooting (inclui diagnóstico `Test-Connection` e 56 playbooks Windows/Linux, com forte cobertura de Active Directory, roles Windows Server, serviços Linux, containers e rede) |
+| `troubleshoot` | Troubleshooting (inclui diagnóstico `Test-Connection` e 62 playbooks Windows/Linux, com forte cobertura de Active Directory, roles Windows Server, serviços Linux, containers, rede, IPsec VPN, Veeam, VMware ESXi, certificados e Group Policy) |
 | `cisco` | Cisco IOS |
 | `container` | Containers (Docker/Kubernetes) |
 | `reporting` | Reporting (PwnDoc/CVSS/Dradis) |
@@ -159,7 +168,7 @@ Cada comando tem tags de severidade, OS e domínio:
 
 ```
 CyberOps.html          — ficheiro único (~1.3 MB)
-├── COMMANDS[]         — 1421 entradas JSON inline
+├── COMMANDS[]         — 1527 entradas JSON inline (106 são playbooks)
 ├── CATEGORIES[]       — 42 definições de categoria (41 + "All Ops")
 ├── ONLINE_TOOLS[]     — 102 ferramentas web
 ├── TEAM_CATS{}        — mapeamento team → categorias
@@ -215,6 +224,9 @@ Pentest e red team sem autorização é ilegal.
 
 O projecto foi desenvolvido de forma iterativa com as seguintes milestones:
 
+- **v7.0** — Filtro **☁ CLOUD** no grupo de OS (ao lado de WIN/NIX), que corresponde à tag `cloud` e expõe os playbooks agnósticos de SO no mesmo sítio que Windows/Linux. Rodapé atualizado (v7.0 · 1527 commands · 106 playbooks)
+- **v6.9b** — Playbooks de **análise forense Windows** (8 novos, +8 comandos → 1527), perspetiva de analista (`forensics`): análise de execução de programas (Prefetch/Amcache/ShimCache/SRUM/BAM/UserAssist), análise do registo (RegRipper/RECmd), timeline do sistema de ficheiros / `$MFT`+`$J`+`$LogFile` (com deteção de timestomping), análise de Event Logs (EvtxECmd + mapa de Event IDs), atividade do utilizador (ShellBags/LNK/Jump Lists), USB / dispositivos removíveis, browser & email forensics (Hindsight/libpff) e anti-forense (limpeza de logs, ADS, file carving). Usa a suite Eric Zimmerman, RegRipper, KAPE e Hindsight
+- **v6.9a** — Expansão **CyberOps & IT** (30 novos, +30 comandos → 1519), mesmo formato por fases. **Cloud & Identidade IR**: BEC M365/Entra, OAuth illicit consent, conta Entra + MFA fatigue, credenciais AWS IAM, bucket S3 exposto, identidade Azure / Golden SAML. **Threat Hunting** (`hunt`): movimento lateral, persistência Win/Linux, beaconing C2, credential dumping (LSASS). **DFIR/Forense**: aquisição de disco + cadeia de custódia, RAM (Volatility), triagem KAPE/Velociraptor, super-timeline (Plaso). **Phishing**: triagem de email, campanha em massa. **Network Defense**: DDoS, firewall/WAF sob ataque, exfiltração. **Vuln & Patching**: resposta a 0-day crítico, patch de emergência. **Resiliência & Ops**: DR/validação de restore, baseline CIS, certificados a expirar. **Mais Troubleshooting**: IPsec VPN, Veeam, VMware ESXi, latência/packet loss, Group Policy
 - **v1–v5** — Base inicial: recon, web, AD, shells, lateral, persist, evasion
 - **v6** — Expansão major: Windows Server, Kerberos, container, phishing, DevSecOps, mobile, OT/ICS, reporting, vuln scanning, Sysinternals, IR
 - **v6.1** — Estabilização: standardização de variáveis, install fields completos, ordenação por severidade, sistema de domain tags, bug fixes de runtime (mobile browser, anti-recursion, rendering resilience)
