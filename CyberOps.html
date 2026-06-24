@@ -64,6 +64,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .fgrp button.a-os-all{background:rgba(16,185,129,.15);color:var(--green2)}
 .fgrp button.a-os-win{background:rgba(56,189,248,.12);color:#bae6fd}
 .fgrp button.a-os-lin{background:rgba(52,211,153,.12);color:#a7f3d0}
+.fgrp button.a-os-cloud{background:rgba(56,189,248,.1);color:#bae6fd}
 .fbtn{background:var(--bg2);border:1px solid var(--border2);border-radius:4px;
   padding:3px 7px;cursor:pointer;font-family:var(--font);font-size:.6rem;letter-spacing:.06em;color:var(--text2)}
 .fbtn.a-fav{background:rgba(251,191,36,.12);border-color:rgba(251,191,36,.4);color:#fde68a}
@@ -382,7 +383,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
       <button data-team="sysops">OPS · <span id="cnt-ops">0</span></button>
       <button data-team="ir"    >IR · <span id="cnt-ir">0</span></button>
     </div>
-    <div class="fgrp" id="os-group"><button data-os="all" class="a-os-all">ALL OS</button><button data-os="win">⊞ WIN · <span id="cnt-win">0</span></button><button data-os="lin">△ NIX · <span id="cnt-nix">0</span></button></div>
+    <div class="fgrp" id="os-group"><button data-os="all" class="a-os-all">ALL OS</button><button data-os="win">⊞ WIN · <span id="cnt-win">0</span></button><button data-os="lin">△ NIX · <span id="cnt-nix">0</span></button><button data-os="cloud">☁ CLOUD · <span id="cnt-cloud">0</span></button></div>
     <button class="fbtn" id="fav-btn">★ FAVS · <span id="cnt-favs">0</span></button>
     <button class="fbtn" id="hist-btn">⏱ HIST · <span id="cnt-hist">0</span></button>
     <button class="fbtn a-vars" id="vars-btn">▲ VARS · <span id="cnt-vars-filled">0</span>/29</button>
@@ -472,7 +473,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
     </div>
 
     <div id="footer">
-      <span>CYBER_OPS_TERMINAL v6.8</span>
+      <span>CYBER_OPS_TERMINAL v7.0</span>
       <span>1527 commands · 106 playbooks · 102 online tools</span>
       <span>Ctrl+K search · ★ fav · ⧉ copy resolved</span>
       <span class="warn">⚠ Use only on authorized systems.</span>
@@ -847,10 +848,11 @@ function updateCounts(){
   gid('cnt-osint').textContent=TEAM_CATS.osint.reduce(function(a,c){return a+(CAT_COUNTS[c]||0);},0);
   gid('cnt-ops').textContent=TEAM_CATS.sysops.reduce(function(a,c){return a+(CAT_COUNTS[c]||0);},0);
   var irEl=gid('cnt-ir'); if(irEl) irEl.textContent=(TEAM_CATS.ir||[]).reduce(function(a,c){return a+(CAT_COUNTS[c]||0);},0);
-  var winN=0,nixN=0;
-  COMMANDS.forEach(function(c){if(c.tags.indexOf('win')>=0)winN++;if(c.tags.indexOf('lin')>=0)nixN++;});
+  var winN=0,nixN=0,cloudN=0;
+  COMMANDS.forEach(function(c){if(c.tags.indexOf('win')>=0)winN++;if(c.tags.indexOf('lin')>=0)nixN++;if(c.tags.indexOf('cloud')>=0)cloudN++;});
   var wE=gid('cnt-win');if(wE)wE.textContent=winN;
   var nE=gid('cnt-nix');if(nE)nE.textContent=nixN;
+  var cE=gid('cnt-cloud');if(cE)cE.textContent=cloudN;
   gid('tab-cmd-cnt').textContent='\u00b7 '+COMMANDS.length;
   gid('tab-tools-cnt').textContent='\u00b7 '+ONLINE_TOOLS.length;
   var pbN=0;COMMANDS.forEach(function(c){if(c.name.lastIndexOf('Playbook ',0)===0)pbN++;});
@@ -983,6 +985,7 @@ function getFiltered(){
     if(tFil!=='all'){var a=TEAM_CATS[tFil];if(a&&a.indexOf(e.cat)<0)return false;}
     if(oFil==='win'&&e.tags.indexOf('win')<0)return false;
     if(oFil==='lin'&&e.tags.indexOf('lin')<0)return false;
+    if(oFil==='cloud'&&e.tags.indexOf('cloud')<0)return false;
     if(dFil!=='all'&&getToolTags(e).indexOf(dFil)<0)return false;
     if(q){var h=(e.name+' '+e.cmd+' '+e.tags.join(' ')).toLowerCase();if(h.indexOf(q)<0)return false;}
     return true;
@@ -1006,7 +1009,7 @@ function _renderGrid(){
   gid('cat-name').textContent=cat.label;
   var b=gid('cat-badge');
   var tL=cat.team==='red'?'OFFENSIVE':cat.team==='blue'?'DEFENSIVE':cat.team==='sysops'?'SYSOPS':cat.team==='ir'?'INCIDENT RESPONSE':'OSINT/GENERAL';
-  b.textContent=osFilter==='win'?tL+' | WIN':osFilter==='lin'?tL+' | NIX':tL;
+  b.textContent=osFilter==='win'?tL+' | WIN':osFilter==='lin'?tL+' | NIX':osFilter==='cloud'?tL+' | CLOUD':tL;
   b.className='cat-badge '+cat.team;
   if(!f.length){cmdGrid.innerHTML='';emptyEl.style.display='block';return;}
   emptyEl.style.display='none';
